@@ -17,15 +17,15 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"text\": \"Hello, World!\"\n}"
+          "raw": "{\n  \"text\": \":ball: :happy: :happy2: :heart: :HEART: :heart2: :HEART2: :fablab: :bicycle: :bicycle_r: :owncloud: Hello World!\"\n}"
         },
         "url": {
-          "raw": "http://localhost:5000/display-text",
+          "raw": "http://localhost:5001/display-text",
           "protocol": "http",
           "host": [
             "localhost"
           ],
-          "port": "5000",
+          "port": "5001",
           "path": [
             "display-text"
           ]
@@ -39,12 +39,12 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:5000/predefined-icons",
+          "raw": "http://localhost:5001/predefined-icons",
           "protocol": "http",
           "host": [
             "localhost"
           ],
-          "port": "5000",
+          "port": "5001",
           "path": [
             "predefined-icons"
           ]
