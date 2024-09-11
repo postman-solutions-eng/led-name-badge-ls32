@@ -1,0 +1,37 @@
+{
+  "info": {
+    "name": "LED Name Badge API",
+    "description": "API for controlling the LED name badge",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Display Text",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"Hello, World!\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/display-text",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "display-text"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
