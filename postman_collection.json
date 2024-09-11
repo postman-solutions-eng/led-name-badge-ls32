@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "LED Name Badge API",
-    "description": "API for controlling the LED name badge",
+    "description": "API for controlling the LED name badge. Now includes a GET method to retrieve predefined icons.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -17,17 +17,36 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"text\": \"Hello, World!\"\n}"
+          "raw": "{\n  \"text\": \":ball: :happy: :happy2: :heart: :HEART: :heart2: :HEART2: :fablab: :bicycle: :bicycle_r: :owncloud: Hello World!\"\n}"
         },
         "url": {
-          "raw": "http://localhost:5000/display-text",
+          "raw": "http://localhost:5001/display-text",
           "protocol": "http",
           "host": [
             "localhost"
           ],
-          "port": "5000",
+          "port": "5001",
           "path": [
             "display-text"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Predefined Icons",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5001/predefined-icons",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5001",
+          "path": [
+            "predefined-icons"
           ]
         }
       },
