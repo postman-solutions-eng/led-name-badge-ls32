@@ -19,5 +19,11 @@ def display_text():
 
     return {'status': 'Text displayed on LED'}, 200
 
+@app.route('/predefined-icons', methods=['GET'])
+def get_predefined_icons():
+    creator = SimpleTextAndIcons()
+    icons = list(creator.bitmap_named.keys())
+    return {'icons': icons}, 200
+
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=5001)
