@@ -22,7 +22,7 @@ def display_text():
 @app.route('/predefined-icons', methods=['GET'])
 def get_predefined_icons():
     creator = SimpleTextAndIcons()
-    icons = list(creator.bitmap_named.keys())
+    icons = [f':{name}:' for name in creator.bitmap_named.keys()]
     return {'icons': icons}, 200
 
 if __name__ == '__main__':
