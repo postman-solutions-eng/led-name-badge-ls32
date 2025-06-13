@@ -240,6 +240,60 @@
 					"cookie": [],
 					"responseTime": null,
 					"body": "{\n    \"status\": \"Text displayed on LED\",\n    \"text\": \":ball: :happy: :happy2: :heart: :HEART: :heart2: :HEART2: :fablab: :bicycle: :bicycle_r: :owncloud: Hello World!\"\n}"
+				},
+				{
+					"id": "41094746-3503a9d0-0ae7-4594-afc4-f862e90b76fe",
+					"name": "Display Text",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"text\": \":ball: :happy: :happy2: :heart: :HEART: :heart2: :HEART2: :fablab: :bicycle: :bicycle_r: :owncloud: Hello World!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/display-text",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"display-text"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.1.3 Python/3.9.6"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 13 Jun 2025 16:06:48 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "157"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"status\": \"Text displayed on LED\",\n    \"text\": \":ball: :happy: :happy2: :heart: :HEART: :heart2: :HEART2: :fablab: :bicycle: :bicycle_r: :owncloud: Hello World!\"\n}"
 				}
 			]
 		}
