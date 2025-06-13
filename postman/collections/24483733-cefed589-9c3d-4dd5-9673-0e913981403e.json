@@ -188,7 +188,7 @@
 			},
 			"response": [
 				{
-					"id": "24483733-44cf5c4f-ee89-4079-8743-eabf15a1cbb4",
+					"id": "24483733-080057f3-9841-4c61-8e8d-6e060993f51a",
 					"name": "Display Text",
 					"originalRequest": {
 						"method": "POST",
@@ -203,12 +203,10 @@
 							"raw": "{\n  \"text\": \":ball: :happy: :happy2: :heart: :HEART: :heart2: :HEART2: :fablab: :bicycle: :bicycle_r: :owncloud: Hello World!\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5001/display-text",
-							"protocol": "http",
+							"raw": "{{baseUrl}}/display-text",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "5001",
 							"path": [
 								"display-text"
 							]
@@ -224,7 +222,7 @@
 						},
 						{
 							"key": "Date",
-							"value": "Fri, 13 Jun 2025 10:16:59 GMT"
+							"value": "Fri, 13 Jun 2025 15:55:35 GMT"
 						},
 						{
 							"key": "Content-Type",
@@ -232,7 +230,7 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "35"
+							"value": "157"
 						},
 						{
 							"key": "Connection",
@@ -241,7 +239,7 @@
 					],
 					"cookie": [],
 					"responseTime": null,
-					"body": "{\n    \"status\": \"Text displayed on LED\"\n}"
+					"body": "{\n    \"status\": \"Text displayed on LED\",\n    \"text\": \":ball: :happy: :happy2: :heart: :HEART: :heart2: :HEART2: :fablab: :bicycle: :bicycle_r: :owncloud: Hello World!\"\n}"
 				}
 			]
 		}
