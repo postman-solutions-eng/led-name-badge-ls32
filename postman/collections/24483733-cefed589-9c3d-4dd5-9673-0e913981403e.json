@@ -203,10 +203,10 @@
 							"raw": "{\n  \"text\": \":ball: :happy: :happy2: :heart: :HEART: :heart2: :HEART2: :fablab: :bicycle: :bicycle_r: :owncloud: Hello World!\"\n}"
 						},
 						"url": {
-							"raw": "https://a84a2672-11fd-41e3-8f81-5127bca46a38.mock.pstmn.io/display-text",
-							"protocol": "https",
+							"raw": "http://localhost:5001/display-text",
+							"protocol": "http",
 							"host": [
-								"https://a84a2672-11fd-41e3-8f81-5127bca46a38.mock.pstmn.io"
+								"localhost"
 							],
 							"port": "5001",
 							"path": [
