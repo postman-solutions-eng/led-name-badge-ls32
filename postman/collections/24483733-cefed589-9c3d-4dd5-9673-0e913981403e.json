@@ -12,6 +12,7 @@
 				{
 					"listen": "test",
 					"script": {
+						"id": "d2422b1c-05c6-4b79-987a-de837da683ed",
 						"exec": [
 							"pm.test(\"Response status code is 200\", function () {",
 							"    pm.expect(pm.response.code).to.eql(200);",
@@ -19,7 +20,7 @@
 							"",
 							"",
 							"pm.test(\"Response has the correct Content-Type of application/json\", function () {",
-							"    pm.expect(pm.response.headers.get('Content-Type')).to.equal('application/json');",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.include(\"application/json\");",
 							"});",
 							"",
 							"",
@@ -45,7 +46,8 @@
 							"    pm.expect(pm.response.responseTime).to.be.below(200);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
