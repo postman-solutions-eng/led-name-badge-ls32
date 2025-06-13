@@ -89,23 +89,28 @@
 					"header": [
 						{
 							"key": "Server",
-							"value": "Werkzeug/3.1.3 Python/3.9.6"
+							"value": "Werkzeug/3.1.3 Python/3.9.6",
+							"enabled": true
 						},
 						{
 							"key": "Date",
-							"value": "Fri, 13 Jun 2025 14:44:41 GMT"
+							"value": "Fri, 13 Jun 2025 14:44:41 GMT",
+							"enabled": true
 						},
 						{
 							"key": "Content-Type",
-							"value": "application/json"
+							"value": "application/json",
+							"enabled": true
 						},
 						{
 							"key": "Content-Length",
-							"value": "173"
+							"value": "173",
+							"enabled": true
 						},
 						{
 							"key": "Connection",
-							"value": "close"
+							"value": "close",
+							"enabled": true
 						}
 					],
 					"cookie": [],
@@ -188,7 +193,7 @@
 			},
 			"response": [
 				{
-					"id": "24483733-080057f3-9841-4c61-8e8d-6e060993f51a",
+					"id": "24483733-44cf5c4f-ee89-4079-8743-eabf15a1cbb4",
 					"name": "Display Text",
 					"originalRequest": {
 						"method": "POST",
@@ -203,10 +208,12 @@
 							"raw": "{\n  \"text\": \":ball: :happy: :happy2: :heart: :HEART: :heart2: :HEART2: :fablab: :bicycle: :bicycle_r: :owncloud: Hello World!\"\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/display-text",
+							"raw": "http://localhost:5001/display-text",
+							"protocol": "http",
 							"host": [
-								"{{baseUrl}}"
+								"localhost"
 							],
+							"port": "5001",
 							"path": [
 								"display-text"
 							]
@@ -222,7 +229,7 @@
 						},
 						{
 							"key": "Date",
-							"value": "Fri, 13 Jun 2025 15:55:35 GMT"
+							"value": "Fri, 13 Jun 2025 10:16:59 GMT"
 						},
 						{
 							"key": "Content-Type",
@@ -230,7 +237,7 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "157"
+							"value": "35"
 						},
 						{
 							"key": "Connection",
@@ -239,7 +246,7 @@
 					],
 					"cookie": [],
 					"responseTime": null,
-					"body": "{\n    \"status\": \"Text displayed on LED\",\n    \"text\": \":ball: :happy: :happy2: :heart: :HEART: :heart2: :HEART2: :fablab: :bicycle: :bicycle_r: :owncloud: Hello World!\"\n}"
+					"body": "{\n    \"status\": \"Text displayed on LED\"\n}"
 				}
 			]
 		}
@@ -271,8 +278,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://localhost:5001",
-			"type": "string"
+			"value": "http://localhost:5001"
 		}
 	]
 }
