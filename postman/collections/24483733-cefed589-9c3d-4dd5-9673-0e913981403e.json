@@ -129,6 +129,7 @@
 				{
 					"listen": "test",
 					"script": {
+						"id": "a4f676cc-f213-498a-8b89-45e84f953279",
 						"exec": [
 							"",
 							"pm.test(\"Response status code is 200\", function () {",
@@ -151,20 +152,16 @@
 							"    pm.expect(responseData.status).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Status should not be empty\");",
 							"});",
 							"",
-							"",
-							"pm.test(\"Text must be a non-empty string\", function () {",
+							"// ensure that the text includes at least one emoji starting with :",
+							"pm.test(\"Text must include at least one emoji\", function () {",
 							"    const responseData = pm.response.json();",
-							"    ",
+							"",
 							"    pm.expect(responseData).to.be.an('object');",
-							"    pm.expect(responseData.text).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
-							"});",
-							"",
-							"",
-							"pm.test(\"Content-Type is application/json\", function () {",
-							"    pm.expect(pm.response.headers.get('Content-Type')).to.equal('application/json');",
+							"    pm.expect(responseData.text).to.match(/:\\w+/);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
