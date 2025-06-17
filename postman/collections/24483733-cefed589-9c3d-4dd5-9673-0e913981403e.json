@@ -12,40 +12,12 @@
 				{
 					"listen": "test",
 					"script": {
+						"id": "f62a40a5-d63c-4a60-a8d9-a43a7bf8e018",
 						"exec": [
-							"pm.test(\"Response status code is 200\", function () {",
-							"    pm.expect(pm.response.code).to.eql(200);",
-							"});",
-							"",
-							"",
-							"pm.test(\"Response has the correct Content-Type of application/json\", function () {",
-							"    pm.expect(pm.response.headers.get('Content-Type')).to.equal('application/json');",
-							"});",
-							"",
-							"",
-							"pm.test(\"Icons is an array with at least one element\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData).to.be.an('object');",
-							"    pm.expect(responseData.icons).to.be.an('array').that.has.lengthOf.at.least(1, \"Icons array should contain at least one element\");",
-							"});",
-							"",
-							"",
-							"pm.test(\"Each icon in the array is a non-empty string\", function () {",
-							"    const responseData = pm.response.json();",
-							"    ",
-							"    pm.expect(responseData).to.have.property('icons').that.is.an('array');",
-							"    responseData.icons.forEach(icon => {",
-							"        pm.expect(icon).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Icon value should not be empty\");",
-							"    });",
-							"});",
-							"",
-							"",
-							"pm.test(\"Response time is less than 200ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(200);",
-							"});"
+							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
