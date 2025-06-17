@@ -179,7 +179,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"text\": \":ball: :happy: :happy2: :heart: :HEART: :heart2: :HEART2: :fablab: :bicycle: :bicycle_r: :owncloud: Hello World!\"\n}"
+					"raw": "{\n  \"text\": \"{{vault:vault-value-one}}\"\n}"
 				},
 				"url": {
 					"raw": "{{baseUrl}}/display-text",
@@ -275,6 +275,7 @@
 	],
 	"variable": [
 		{
+			"id": "094d87e7-f220-4ea1-a046-f203b8f14b6d",
 			"key": "baseUrl",
 			"value": "https://a84a2672-11fd-41e3-8f81-5127bca46a38.mock.pstmn.io",
 			"type": "string"
