@@ -33,6 +33,7 @@ jobs:
               echo "Running collection: $name"
               postman collection run "$dir" \
                 --environment "postman/environments/LED Display Mock Environment.environment.yaml" \
-                --working-dir "$GITHUB_WORKSPACE"
+                --working-dir "$GITHUB_WORKSPACE" \
+                --report-events
             fi
           done
