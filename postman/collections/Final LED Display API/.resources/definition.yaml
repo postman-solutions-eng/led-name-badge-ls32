@@ -1,0 +1,112 @@
+$kind: collection
+description: >-
+  # API for controlling LED name badge displays
+
+
+  This API allows you to update the text and visual content displayed on LED
+  badges, including support for alphanumeric text and predefined icon codes.
+
+
+  ## Supported Icons
+
+
+  The following icon codes can be embedded in text using the `:icon_name:`
+  syntax:
+
+
+  - `:ball:` - Filled circle
+      
+  - `:happy:` - Simple smiley face
+      
+  - `:happy2:` - Larger smiley (2 columns wide)
+      
+  - `:heart:` - Outline heart
+      
+  - `:HEART:` - Filled heart
+      
+  - `:heart2:` - Larger outline heart (2 columns wide)
+      
+  - `:HEART2:` - Larger filled heart (2 columns wide)
+      
+  - `:fablab:` - FabLab logo
+      
+  - `:bicycle:` - Bicycle icon (3 columns wide)
+      
+  - `:bicycle_r:` - Bicycle facing right (3 columns wide)
+      
+  - `:owncloud:` - OwnCloud logo (3 columns wide)
+      
+  - `:octocat:` - GitHub Octocat
+      
+  - `:smile:` - Smile emoji
+      
+  - `:star:` - Star icon
+      
+  - `:sun:` - Sun icon
+      
+
+  ## Character Restrictions
+
+
+  **Supported characters:**
+
+
+  - Letters: A-Z, a-z
+      
+  - Numbers: 0-9
+      
+  - Special characters: `^ !"$%&/()=?` °}\]\[{@ \~ |<>,;.:-_#'+_\`
+      
+  - German umlauts: äöüÄÖÜß
+      
+  - French/European accents: àäòöùüèéêëôöûîïÿçÀÅÄÉÈÊËÖÔÜÛÙŸŠ
+      
+
+  **NOT supported:**
+
+
+  - Unicode emoji (e.g., 🌍) - will return a 400 error
+      
+
+  **Escape sequences:**
+
+
+  - `::` - Escapes to a single literal colon
+      
+
+  **Custom images:**
+
+
+  - Use `:path/to/image.png:` syntax to reference custom images
+      
+  - Images must be exactly 11 pixels high
+      
+
+  ## Additional Capabilities (not exposed in API yet)
+
+
+  - **Brightness control:** 25%, 50%, 75%, 100%
+      
+  - **Animation modes:** 0-8 (various scroll and display effects)
+      
+  - **Speed control:** 1-8 (animation speed)
+      
+  - **Blink effect:** Enable/disable blinking
+      
+  - **Ant effect:** Marching border animation
+      
+
+  ## How the spec was created
+
+
+  This spec was created by having analyzed the backend Python code with Postman
+  Agent mode with the following prompt:
+
+
+  > The spec and the Postman collection both seem very incomplete, not
+  containing all possible icons and other character restrictions. Can you scan
+  the backend API code to find out what additional endpoints and capabilities
+  regarding icons and character restrictions there are and update the spec
+  accordingly?
+variables:
+  baseUrl: http://127.0.0.1:5001

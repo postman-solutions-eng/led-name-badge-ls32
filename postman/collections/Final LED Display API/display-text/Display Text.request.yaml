@@ -1,0 +1,115 @@
+$kind: http-request
+description: |-
+  Updates the text and visual content displayed on the LED name badge. Accepts text and icon codes in the format `:icon_name:`.
+
+  <img src="https://content.pstmn.io/05b1ef2c-9fd3-4f0e-8b2f-76998fb3f6e5/aW1hZ2UucG5n" width="240">
+
+  ## Supported Icons
+
+  The following icon codes can be embedded in text using the `:icon_name:` syntax:
+
+  - `:ball:` - Filled circle
+      
+  - `:happy:` - Simple smiley face
+      
+  - `:happy2:` - Larger smiley (2 columns wide)
+      
+  - `:heart:` - Outline heart
+      
+  - `:HEART:` - Filled heart
+      
+  - `:heart2:` - Larger outline heart (2 columns wide)
+      
+  - `:HEART2:` - Larger filled heart (2 columns wide)
+      
+  - `:fablab:` - FabLab logo
+      
+  - `:bicycle:` - Bicycle icon (3 columns wide)
+      
+  - `:bicycle_r:` - Bicycle facing right (3 columns wide)
+      
+  - `:owncloud:` - OwnCloud logo (3 columns wide)
+      
+  - `:octocat:` - GitHub Octocat
+      
+  - `:smile:` - Smile emoji
+      
+  - `:star:` - Star icon
+      
+  - `:sun:` - Sun icon
+      
+
+  ## Character Restrictions
+
+  **Supported characters:**
+
+  - Letters: A-Z, a-z
+      
+  - Numbers: 0-9
+      
+  - Special characters: `^ !"$%&/()=?` °}\]\[{@ \~ |<>,;.:-_#'+_\`
+      
+  - German umlauts: äöüÄÖÜß
+      
+  - French/European accents: àäòöùüèéêëôöûîïÿçÀÅÄÉÈÊËÖÔÜÛÙŸŠ
+      
+
+  **NOT supported:**
+
+  - Unicode emoji (e.g., 🌍) - will return a 400 error
+url: "{{baseUrl}}/display-text"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+  x-openai-prompt: "A children's book drawing style image representing the text:
+    {text}. Create a simple, colorful, and friendly illustration."
+body:
+  type: json
+  content: |-
+    {
+      "text": "Hello World! :star:"
+    }
+auth:
+  type: apikey
+  credentials:
+    value: "{{vault:openaikey}}"
+    key: X-API-Key
+scripts:
+  - type: afterResponse
+    code: >-
+      const responseData = pm.response.json();
+
+
+      // Check if mock_image exists in the response
+
+      if (responseData.mock_image) {
+          // Create visualization with base64 image
+          const template = `
+              <div style="text-align: center; padding: 20px;">
+                  <h3>LED Display Output</h3>
+                  <img src="data:image/png;base64,{{mock_image}}" alt="LED Display" style="max-width: 100%; border: 2px solid #333; border-radius: 8px;" />
+                  <p style="margin-top: 15px;"><strong>Status:</strong> {{status}}</p>
+                  <p><strong>Text:</strong> {{text}}</p>
+              </div>
+          `;
+          
+          pm.visualizer.set(template, {
+              mock_image: responseData.mock_image,
+              status: responseData.status,
+              text: responseData.text
+          });
+      } else {
+          // Use LED visualization code when mock_image doesn't exist
+          const ledViz = pm.require('@automotive-demo/led-viz');
+          const payload = {
+              displayText: responseData.text || "NO DATA"
+          };
+          pm.visualizer.set(ledViz.template, payload);
+      }
+    language: text/javascript
+    packages:
+      "@automotive-demo/led-viz":
+        id: 019be0fc-20d1-7647-84f9-d8ed05edc08a
+examples: ./.resources/Display Text.resources/examples
+order: 1000

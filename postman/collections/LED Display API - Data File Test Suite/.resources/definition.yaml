@@ -1,0 +1,15 @@
+$kind: collection
+description: >-
+  Test suite for the /display-text endpoint covering various scenarios including
+  valid messages with icons, invalid Unicode characters, edge cases, and special
+  characters.
+
+
+  This test suite was generated with the following prompt:
+
+
+  > "Can you create a new collection and data file that mixes allowed messages
+  with allowed icons and invalid messages and test whether the expected results
+  occur?"
+variables:
+  baseUrl: http://127.0.0.1:5001

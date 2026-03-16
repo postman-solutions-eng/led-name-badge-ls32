@@ -1,0 +1,5 @@
+name: LED Display Localhost
+values:
+  - key: baseUrl
+    value: 'http://localhost:5001'
+    enabled: true

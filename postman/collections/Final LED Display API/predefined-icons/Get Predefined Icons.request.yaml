@@ -1,0 +1,10 @@
+$kind: http-request
+description: Returns a list of all available icon codes that can be used in
+  display text. Icons are returned as simple string codes in the `:icon_name:`
+  format.
+url: "{{baseUrl}}/predefined-icons"
+method: GET
+headers:
+  Accept: application/json
+examples: ./.resources/Get Predefined Icons.resources/examples
+order: 1000

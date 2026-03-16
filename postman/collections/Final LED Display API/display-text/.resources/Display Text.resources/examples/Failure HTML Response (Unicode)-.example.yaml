@@ -1,0 +1,36 @@
+$kind: http-example
+name: Failure HTML Response (Unicode)?
+request:
+  url: "{{baseUrl}}/display-text"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: X-API-Key
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  body:
+    type: json
+    content: |-
+      {
+        "text": "Hello World!"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+    Server: Werkzeug/3.1.4 Python/3.13.5
+    Date: Mon, 19 Jan 2026 12:47:31 GMT
+    Content-Length: "69"
+    Connection: close
+  body:
+    type: json
+    content: |-
+      {
+        "details": "'🌍'",
+        "error": "Invalid display string format"
+      }
+order: 2000

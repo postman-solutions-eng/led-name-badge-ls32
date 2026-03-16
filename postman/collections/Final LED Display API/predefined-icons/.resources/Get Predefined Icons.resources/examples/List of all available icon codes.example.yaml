@@ -1,0 +1,41 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/predefined-icons"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: X-API-Key
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+    Server: Werkzeug/3.1.5 Python/3.13.7
+    Date: Mon, 19 Jan 2026 12:20:00 GMT
+    Connection: close
+  body:
+    type: json
+    content: |-
+      {
+        "icons": [
+          ":ball:",
+          ":happy:",
+          ":happy2:",
+          ":heart:",
+          ":HEART:",
+          ":heart2:",
+          ":HEART2:",
+          ":fablab:",
+          ":bicycle:",
+          ":bicycle_r:",
+          ":owncloud:",
+          ":octocat:",
+          ":smile:",
+          ":star:",
+          ":sun:"
+        ]
+      }
+order: 1000

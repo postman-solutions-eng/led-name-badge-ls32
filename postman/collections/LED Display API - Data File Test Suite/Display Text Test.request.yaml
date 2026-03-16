@@ -1,0 +1,77 @@
+$kind: http-request
+description: >-
+  Tests the /display-text endpoint with various text inputs. Uses iteration data
+  variables:
+
+  - `text`: The text content to display
+
+  - `expectedStatus`: Expected HTTP status code (200 or 400)
+
+  - `testDescription`: Description of the test case
+url: "{{baseUrl}}/display-text"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "text": "{{text}}"
+    }
+scripts:
+  - type: afterResponse
+    code: >-
+      // Get expected values from iteration data
+
+      const expectedStatus = parseInt(pm.iterationData.get('expectedStatus') ||
+      pm.variables.get('expectedStatus'));
+
+      const testDescription = pm.iterationData.get('testDescription') ||
+      pm.variables.get('testDescription') || 'Display Text Test';
+
+
+      // Test 1: Validate status code matches expected
+
+      pm.test(`${testDescription}: Status code is ${expectedStatus}`, function
+      () {
+          pm.response.to.have.status(expectedStatus);
+      });
+
+
+      // Test 2: Validate response structure
+
+      pm.test(`${testDescription}: Response has valid JSON structure`, function
+      () {
+          pm.response.to.be.json;
+          const jsonData = pm.response.json();
+          pm.expect(jsonData).to.be.an('object');
+      });
+
+
+      // Test 3: Conditional validation based on expected status
+
+      if (expectedStatus === 200) {
+          // For successful requests, verify success indicators
+          pm.test(`${testDescription}: Response contains success indicators`, function () {
+              const jsonData = pm.response.json();
+              // Check for common success indicators
+              const hasSuccessIndicator = 
+                  jsonData.success === true || 
+                  jsonData.status === 'success' ||
+                  jsonData.message !== undefined ||
+                  jsonData.text !== undefined;
+              pm.expect(hasSuccessIndicator).to.be.true;
+          });
+      } else if (expectedStatus === 400) {
+          // For failed requests, verify error message is present
+          pm.test(`${testDescription}: Response contains error message`, function () {
+              const jsonData = pm.response.json();
+              const hasErrorIndicator = 
+                  jsonData.error !== undefined || 
+                  jsonData.message !== undefined ||
+                  jsonData.detail !== undefined;
+              pm.expect(hasErrorIndicator).to.be.true;
+          });
+      }
+    language: text/javascript
+order: 1000

@@ -1,0 +1,5 @@
+name: LED Display Mock Environment
+values:
+  - key: baseUrl
+    value: 'https://16d7e73f-15b8-4fb0-87c4-fe02baff587a.mock.pstmn.io'
+    enabled: true
