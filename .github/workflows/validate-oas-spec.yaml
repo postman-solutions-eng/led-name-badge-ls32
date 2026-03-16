@@ -14,4 +14,4 @@ jobs:
         run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
       - name: Validate Spec
         run: |
-          postman spec lint postman/specs/Final\ LED\ Display\ API/index.yaml --fail-severity error
+          postman spec lint "postman/specs/Final LED Display API/index.yaml" --fail-severity error

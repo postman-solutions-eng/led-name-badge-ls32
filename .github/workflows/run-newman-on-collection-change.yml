@@ -1,32 +1,35 @@
-name: Run Newman on Postman Collection Change
+name: Run Postman collections on change
 
 on:
   push:
     paths:
-      - 'postman/collections/*.json'
+      - 'postman/collections/**'
+      - 'postman/environments/**'
   pull_request:
     paths:
-      - 'postman/collections/*.json'
+      - 'postman/collections/**'
+      - 'postman/environments/**'
 
 jobs:
-  run-newman:
+  run-collections:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Newman
-        run: npm install -g newman
-
-      - name: Run Newman on all collections
+      - name: Install Postman CLI
         run: |
-          for collection in postman/collections/*.json; do
-            echo "Running Newman for $collection"
-            newman run "$collection" \
-              -e "postman/environments/LED Display Mock Environment.postman_environment.json"
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+      - name: Run Postman collections
+        run: |
+          for collection_dir in postman/collections/*/; do
+            dir="${collection_dir%/}"
+            if [ -f "${dir}/.resources/definition.yaml" ] || [ -f "${dir}/.resources/definition.yml" ]; then
+              name=$(basename "$dir")
+              echo "Running collection: $name"
+              postman collection run "$dir" \
+                --environment "postman/environments/LED Display Mock Environment.environment.yaml" \
+                --working-dir "$GITHUB_WORKSPACE"
+            fi
           done
