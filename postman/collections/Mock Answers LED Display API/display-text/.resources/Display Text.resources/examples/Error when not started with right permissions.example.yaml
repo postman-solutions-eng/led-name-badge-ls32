@@ -1,0 +1,24 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/display-text"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "text": "Hello World!"
+      }
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  headers:
+    Server: Werkzeug/3.1.4 Python/3.13.5
+    Date: Mon, 19 Jan 2026 12:16:58 GMT
+    Content-Length: "265"
+    Connection: close
+  body:
+    type: text
+    content: ""
+order: 3000

@@ -1,0 +1,27 @@
+$kind: http-request
+description: |-
+  Updates the text and visual content displayed on the LED name badge. Accepts text and icon codes in the format `:icon_name:`.
+
+  <img src="https://content.pstmn.io/05b1ef2c-9fd3-4f0e-8b2f-76998fb3f6e5/aW1hZ2UucG5n" width="240">
+
+  ## Supported Icon Codes
+  | Icon Code | Description | |-----------|-------------| | `:ball:` | Filled circle | | `:happy:` | Simple smiley face | | `:happy2:` | Larger smiley (2 columns wide) | | `:heart:` | Outline heart | | `:HEART:` | Filled heart | | `:heart2:` | Larger outline heart (2 columns wide) | | `:HEART2:` | Larger filled heart (2 columns wide) | | `:fablab:` | FabLab logo | | `:bicycle:` | Bicycle icon (3 columns wide) | | `:bicycle_r:` | Bicycle facing right (3 columns wide) | | `:owncloud:` | OwnCloud logo (3 columns wide) | | `:octocat:` | GitHub Octocat | | `:smile:` | Smile emoji | | `:star:` | Star icon | | `:sun:` | Sun icon |
+
+  ## Character Restrictions
+  **Supported characters:** - Letters: A-Z, a-z - Numbers: 0-9 - Special characters: `^ !"$%&/()=?` °\}][{@ ~ |<>,;.:-_#'+*` - German umlauts: äöüÄÖÜß - French/European accents: àäòöùüèéêëôöûîïÿçÀÅÄÉÈÊËÖÔÜÛÙŸŠ
+  **NOT supported:** - Unicode emoji (e.g., 🌍) - will return a 400 error with "Invalid display string format"
+  **Escape sequences:** - `::` - Escapes to a single literal colon (e.g., `10::30` displays as `10:30`)
+  **Custom images:** - Use `:path/to/image.png:` syntax to reference custom image files - Images must be exactly 11 pixels high
+url: "{{baseUrl}}/display-text"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "text": "Hello World!"
+    }
+examples: ./.resources/Display Text.resources/examples
+order: 1000

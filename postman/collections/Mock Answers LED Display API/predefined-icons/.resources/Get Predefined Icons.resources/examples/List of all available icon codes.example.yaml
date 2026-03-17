@@ -1,0 +1,43 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/predefined-icons"
+  method: GET
+  headers:
+    Accept: application/json
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Server
+      value: Werkzeug/3.1.5 Python/3.13.7
+    - key: Date
+      value: Mon, 19 Jan 2026 12:20:00 GMT
+    - key: Content-Type
+      value: application/json
+    - key: Connection
+      value: close
+  body:
+    type: json
+    content: |-
+      {
+        "icons": [
+          ":ball:",
+          ":happy:",
+          ":happy2:",
+          ":heart:",
+          ":HEART:",
+          ":heart2:",
+          ":HEART2:",
+          ":fablab:",
+          ":bicycle:",
+          ":bicycle_r:",
+          ":owncloud:",
+          ":octocat:",
+          ":smile:",
+          ":star:",
+          ":sun:"
+        ]
+      }
+order: 1000

@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/display-summary"
+  method: POST
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "welcome",
+        "customText": "John"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Server
+      value: Werkzeug/3.1.5 Python/3.13.7
+    - key: Date
+      value: Mon, 19 Jan 2026 12:25:00 GMT
+    - key: Content-Type
+      value: application/json
+    - key: Connection
+      value: close
+  body:
+    type: json
+    content: |-
+      {
+        "status": "Summary displayed on LED"
+      }
+order: 1000

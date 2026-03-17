@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/display-text"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: '{"text": "Greetings from Uber :star:", "brightness": 100, "speed": 5,
+      "mode": 0}'
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: '{"success": true, "message": "Display updated successfully",
+      "displayedText": "Greetings from Uber :star:"}'
+order: 48000

@@ -1,0 +1,20 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/display-text"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: '{"text": "Hello Uber 👋", "brightness": 100, "speed": 5, "mode": 0}'
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: '{"success": false, "error": "Invalid characters detected", "message":
+      "Unicode emoji characters are not supported. Please use only supported
+      characters and icon codes."}'
+order: 47000

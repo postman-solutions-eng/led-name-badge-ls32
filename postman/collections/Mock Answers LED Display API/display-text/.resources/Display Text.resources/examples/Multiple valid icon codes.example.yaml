@@ -1,0 +1,19 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/display"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: '{"text": ":ball: :sun: :heart: :smile: :star:"}'
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: '{"success": true, "message": "Text displayed successfully", "text":
+      ":ball: :sun: :heart: :smile: :star:"}'
+order: 17000

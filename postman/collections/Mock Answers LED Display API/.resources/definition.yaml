@@ -1,0 +1,82 @@
+$kind: collection
+description: >-
+  # API for controlling LED name badge displays
+
+
+  This API allows you to update the text and visual content displayed on LED
+  badges, including support for alphanumeric text and predefined icon codes.
+
+
+  ## Supported Icons
+
+
+  The following icon codes can be embedded in text using the `:icon_name:`
+  syntax:
+
+
+  - `:ball:` - Filled circle
+      
+  - `:happy:` - Simple smiley face
+      
+  - `:happy2:` - Larger smiley (2 columns wide)
+      
+  - `:heart:` - Outline heart
+      
+  - `:HEART:` - Filled heart
+      
+  - `:heart2:` - Larger outline heart (2 columns wide)
+      
+  - `:HEART2:` - Larger filled heart (2 columns wide)
+      
+  - `:fablab:` - FabLab logo
+      
+  - `:bicycle:` - Bicycle icon (3 columns wide)
+      
+  - `:bicycle_r:` - Bicycle facing right (3 columns wide)
+      
+  - `:owncloud:` - OwnCloud logo (3 columns wide)
+      
+  - `:octocat:` - GitHub Octocat
+      
+  - `:smile:` - Smile emoji
+      
+  - `:star:` - Star icon
+      
+  - `:sun:` - Sun icon
+      
+
+  ## Character Restrictions
+
+
+  **Supported characters:**
+
+
+  - Letters: A-Z, a-z
+      
+  - Numbers: 0-9
+      
+  - Special characters: `^ !"$%&/()=?` °}\]\[{@ \~ |<>,;.:-_#'+_\`
+      
+  - German umlauts: äöüÄÖÜß
+      
+  - French/European accents: àäòöùüèéêëôöûîïÿçÀÅÄÉÈÊËÖÔÜÛÙŸŠ
+      
+
+  **NOT supported:**
+
+
+  - Unicode emoji (e.g., 🌍) - will return a 400 error
+      
+
+  ## Adding more examples
+
+
+  Try this prompt in agent mode:
+
+
+  > Can you add two examples to the data file @"data-file.csv" - one succeeding
+  and one failing, that is greeting company Uber with valid characters on the
+  LED and once with invalid ones - also add the samples to our mock server in
+  @"Mock Answers LED Display API"
+variables:
+  baseUrl: http://127.0.0.1:5001

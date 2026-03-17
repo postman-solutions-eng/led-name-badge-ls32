@@ -1,0 +1,20 @@
+$kind: http-example
+name: Multiple valid icon codes
+request:
+  url: "{{baseUrl}}/display-text"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: '{"text": ":ball: :sun: :heart: :smile: :star:"}'
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: '{"success": true, "message": "Text displayed successfully", "text":
+      ":ball: :sun: :heart: :smile: :star:"}'
+order: 21000

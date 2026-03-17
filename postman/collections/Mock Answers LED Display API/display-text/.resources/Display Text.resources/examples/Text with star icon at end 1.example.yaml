@@ -1,0 +1,20 @@
+$kind: http-example
+name: Text with star icon at end
+request:
+  url: "{{baseUrl}}/display-text"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: "{\"text\": \"You're a :star:\"}"
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: "{\"success\": true, \"message\": \"Text displayed successfully\",
+      \"text\": \"You're a :star:\"}"
+order: 22000

@@ -1,0 +1,24 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/display-text"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: '{"text": ":invalid: icon code"}'
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: >-
+      {
+        "success": false,
+        "error": "Invalid icon code",
+        "message": "The icon code ':invalid:' is not recognized. Please use valid icon codes like :heart:, :smile:, :star:, :ball:, :sun:, etc.",
+        "invalidIconCode": ":invalid:"
+      }
+order: 12000
