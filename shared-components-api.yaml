@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Final LED Display API
+  title: Shared Components API
   version: 1.0.0
   description: >-
     # API for controlling LED name badge displays
