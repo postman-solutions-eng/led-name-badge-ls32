@@ -13,4 +13,4 @@ jobs:
       - name: Login to Postman CLI
         run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
       - name: Validate Spec
-        run: postman spec lint final-led-display-api.yaml --fail-severity error
+        run: postman spec lint final-led-display-api.yaml --fail-severity error --report-events
