@@ -1,0 +1,33 @@
+$kind: collection
+description: >-
+  Contract tests for the LED Display API that validate status codes for all
+  examples in the Final LED Display API collection.
+
+
+  Original user prompt: "can you create a new collection from @"Final LED
+  Display API" called "LED Display Contract Tests" that is testing the status
+  code for every example included in the original collection? The mock
+  collection backing the @"LED Display Mock Environment" this should run against
+  is @"Mock Answers LED Display API" - if you cannot find your examples in it,
+  please add them to that mock collection. Also include this prompt in the
+  documentation of the newly generated collection"
+
+
+  This collection contains contract tests for:
+
+
+  - Display Text: "Success with Text + Heart Icon" (expects 200)
+      
+  - Display Text: "Failure HTML Response (Unicode)" (expects 400)
+      
+  - Display Text: "Error when not started with right permissions" (expects 500)
+      
+  - Display Summary: "Summary message displayed successfully" (expects 200)
+      
+  - Get Predefined Icons: "List of all available icon codes" (expects 200)
+      
+
+  Each test validates the expected status code and uses the LED Display Mock
+  Environment.
+variables:
+  baseUrl: ""

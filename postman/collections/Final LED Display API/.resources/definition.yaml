@@ -1,20 +1,16 @@
 $kind: collection
-description: >-
+description: |-
   # API for controlling LED name badge displays
 
+  This API allows you to update the text and visual content displayed on LED badges, including support for alphanumeric text and predefined icon codes.  
 
-  This API allows you to update the text and visual content displayed on LED
-  badges, including support for alphanumeric text and predefined icon codes.
-
+  <img src="https://content.pstmn.io/05b1ef2c-9fd3-4f0e-8b2f-76998fb3f6e5/aW1hZ2UucG5n" width="240">
 
   ## Supported Icons
 
+  The following icon codes can be embedded in text using the `:icon_name:` syntax:
 
-  The following icon codes can be embedded in text using the `:icon_name:`
-  syntax:
-
-
-  - `:ball:` - Filled circle
+  - `:ball:` - Filled circle (ball)
       
   - `:happy:` - Simple smiley face
       
@@ -47,9 +43,7 @@ description: >-
 
   ## Character Restrictions
 
-
   **Supported characters:**
-
 
   - Letters: A-Z, a-z
       
@@ -64,18 +58,15 @@ description: >-
 
   **NOT supported:**
 
-
   - Unicode emoji (e.g., 🌍) - will return a 400 error
       
 
   **Escape sequences:**
 
-
   - `::` - Escapes to a single literal colon
       
 
   **Custom images:**
-
 
   - Use `:path/to/image.png:` syntax to reference custom images
       
@@ -83,7 +74,6 @@ description: >-
       
 
   ## Additional Capabilities (not exposed in API yet)
-
 
   - **Brightness control:** 25%, 50%, 75%, 100%
       
@@ -98,15 +88,14 @@ description: >-
 
   ## How the spec was created
 
+  This spec was created by having analyzed the backend Python code with Postman Agent mode with the following prompt:
 
-  This spec was created by having analyzed the backend Python code with Postman
-  Agent mode with the following prompt:
-
-
-  > The spec and the Postman collection both seem very incomplete, not
-  containing all possible icons and other character restrictions. Can you scan
-  the backend API code to find out what additional endpoints and capabilities
-  regarding icons and character restrictions there are and update the spec
-  accordingly?
+  > The spec and the Postman collection both seem very incomplete, not containing all possible icons and other character restrictions. Can you scan the backend API code to find out what additional endpoints and capabilities regarding icons and character restrictions there are and update the spec accordingly?
 variables:
   baseUrl: http://127.0.0.1:5001
+auth:
+  - id: 13133a73-2573-43c6-8b51-4980da66f794
+    type: apikey
+    name: apikey auth
+    credentials:
+      key: X-API-Key

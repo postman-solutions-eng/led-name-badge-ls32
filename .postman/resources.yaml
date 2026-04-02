@@ -5,9 +5,10 @@ workspace:
 # Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
 cloudResources:
   collections:
-    ../postman/collections/Final LED Display API: 41094746-a3d4a72a-cc8a-49d4-bb20-1ca9c0a73b91
     ../postman/collections/LED Display API - Data File Test Suite: 41094746-9c8766cc-2eb6-4638-9c05-5a263acb2814
     ../postman/collections/Mock Answers LED Display API: 41094746-c0b67a78-73cc-4bd5-a317-eacdeddffcfb
+    ../postman/collections/Final LED Display API: 41094746-a3d4a72a-cc8a-49d4-bb20-1ca9c0a73b91
+    ../postman/collections/LED Display Contract Tests: 41094746-eab03306-4827-4edb-937c-5449e738a90b
   environments:
     ../postman/environments/LED Display Mock Environment.environment.yaml: 41094746-b57f7bf6-e6ed-4568-86c2-bd6df6cfd3c4
     ../postman/environments/LED Display Localhost.environment.yaml: 51394570-f617756c-9ee9-4240-b856-2ff529a6928c

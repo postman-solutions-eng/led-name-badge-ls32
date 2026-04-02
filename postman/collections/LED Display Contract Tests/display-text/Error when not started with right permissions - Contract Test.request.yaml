@@ -1,0 +1,24 @@
+$kind: http-request
+url: "{{baseUrl}}/display-text"
+method: POST
+headers:
+  Content-Type: application/json
+  x-mock-response-code: "500"
+body:
+  type: json
+  content: |-
+    {
+      "text": "Hello World!"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status code is 500", function () {
+          pm.response.to.have.status(500);
+      });
+
+      pm.test("Response indicates server error", function () {
+          pm.expect(pm.response.status).to.equal("Internal Server Error");
+      });
+    language: text/javascript
+order: 3000

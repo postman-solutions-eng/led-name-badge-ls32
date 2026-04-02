@@ -62,8 +62,6 @@ method: POST
 headers:
   Content-Type: application/json
   Accept: application/json
-  x-openai-prompt: "A children's book drawing style image representing the text:
-    {text}. Create a simple, colorful, and friendly illustration."
 body:
   type: json
   content: |-

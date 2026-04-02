@@ -1,0 +1,26 @@
+name: Run LED Display Contract Tests (Postman Cloud)
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  contract-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Postman CLI
+        run: |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+      - name: Login to Postman CLI
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+
+      - name: Run contract tests with mock environment
+        run: |
+          postman collection run "postman/collections/LED Display Contract Tests" \
+            --environment "postman/environments/LED Display Mock Environment.environment.yaml" \
+            --working-dir "$GITHUB_WORKSPACE"
