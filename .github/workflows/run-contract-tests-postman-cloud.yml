@@ -3,7 +3,8 @@ name: Run LED Display Contract Tests (Postman Cloud)
 on:
   push:
     branches:
-      - '**'
+      - main
+  pull_request:
 
 jobs:
   contract-tests:
