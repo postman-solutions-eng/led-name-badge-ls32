@@ -94,7 +94,7 @@ description: |-
 variables:
   baseUrl: http://127.0.0.1:5001
 auth:
-  - id: 13133a73-2573-43c6-8b51-4980da66f794
+  - id: 0c36acda-142a-47fc-a04f-0fe73107cc0d
     type: apikey
     name: apikey auth
     credentials:

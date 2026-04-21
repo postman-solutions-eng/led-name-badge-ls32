@@ -3,7 +3,8 @@ name: Run LED Display API Collection with Data File
 on:
   push:
     branches:
-      - '**'
+      - main
+  pull_request:
 
 jobs:
   run-collection-with-data:
