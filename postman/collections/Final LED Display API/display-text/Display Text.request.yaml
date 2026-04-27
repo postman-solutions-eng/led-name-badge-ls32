@@ -1,4 +1,5 @@
 $kind: http-request
+name: Display Text
 description: |-
   Updates the text and visual content displayed on the LED name badge. Accepts text and icon codes in the format `:icon_name:`.
 
@@ -66,7 +67,7 @@ body:
   type: json
   content: |-
     {
-      "text": "Hello World :heart:"
+      "text": "Hello World! :heart:"
     }
 auth:
   type: apikey
@@ -83,6 +84,7 @@ scripts:
       pm.test("Check if current URL is secure", () => {
           pm.expect(isAValidUrl.secureUrl(pm.request.url.toString())).to.be.true;
           });
+
 
           
 

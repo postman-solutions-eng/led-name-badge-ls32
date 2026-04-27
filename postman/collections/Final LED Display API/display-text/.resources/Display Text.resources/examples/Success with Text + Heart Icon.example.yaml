@@ -14,7 +14,7 @@ request:
     type: json
     content: |-
       {
-        "text": "Hello World!"
+        "text": "Hello World! :heart:"
       }
 response:
   statusCode: 200

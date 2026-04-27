@@ -15,7 +15,7 @@ request:
     type: json
     content: |-
       {
-        "text": "Hello World!"
+        "text": "Hello World 🌍 !"
       }
 response:
   statusCode: 400
