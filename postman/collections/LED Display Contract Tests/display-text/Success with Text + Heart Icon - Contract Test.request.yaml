@@ -1,4 +1,5 @@
 $kind: http-request
+name: Success with Text + Heart Icon - Contract Test
 url: "{{baseUrl}}/display-text"
 method: POST
 headers:
@@ -8,7 +9,7 @@ body:
   type: json
   content: |-
     {
-      "text": "Hello World! :heart:"
+      "text": "Postman :heart: ABB"
     }
 scripts:
   - type: afterResponse
