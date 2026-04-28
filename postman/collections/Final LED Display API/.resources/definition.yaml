@@ -2,7 +2,7 @@ $kind: collection
 description: |-
   # API for controlling LED name badge displays
 
-  This API allows you to update the text and visual content displayed on LED badges, including support for alphanumeric text and predefined icon codes.  
+  This API allows you to update the text and visual content displayed on LED badges, including support for alphanumeric text and predefined icon codes.
 
   <img src="https://content.pstmn.io/05b1ef2c-9fd3-4f0e-8b2f-76998fb3f6e5/aW1hZ2UucG5n" width="240">
 
@@ -10,7 +10,7 @@ description: |-
 
   The following icon codes can be embedded in text using the `:icon_name:` syntax:
 
-  - `:ball:` - Filled circle (ball)
+  - `:ball:` - Filled circle
       
   - `:happy:` - Simple smiley face
       
@@ -94,8 +94,9 @@ description: |-
 variables:
   baseUrl: http://127.0.0.1:5001
 auth:
-  - id: 0c36acda-142a-47fc-a04f-0fe73107cc0d
+  - id: f07e8a36-9f85-4646-9b55-49309fb8655b
     type: apikey
     name: apikey auth
     credentials:
       key: X-API-Key
+      in: header
