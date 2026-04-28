@@ -2,7 +2,7 @@
 
 ## SpecHub specific
 
-The spec and the Postman collection both seem very incomplete, not containing all possible icons and other character restrictions. Can you scan the backend API code to find out what additional endpoints and capabilities regarding icons and character restrictions there are and update the spec accordingly?
+The spec and the Postman collection both seem very incomplete, not containing all possible icons and other character restrictions. Can you scan the backend API code to find out what additional endpoints and capabilities regarding icons and character restrictions there are and create a new spec?
 
 Can you create a mock server and environment for this collection?
 
@@ -13,6 +13,10 @@ Can you create a new collection and data file that mixes allowed messages with a
 Can you create a new collection and data file that mixes allowed messages with allowed icons and invalid messages and test whether the expected results occur?
 
 Can you add two examples to the data file @"data-file.csv" - one succeeding and one failing, that is greeting company Uber with valid characters on the LED and once with invalid ones - also add the samples to our mock server in @"Mock Answers LED Display API"
+
+Can you add an example to Mock Answers LED Display API that matches exactly the body payload of the current request and returns the same response as the current request?
+
+Can you tell why the current request ist failing and adjust the payload based on what you know about this API?
 
 ## Request Chaining example
 

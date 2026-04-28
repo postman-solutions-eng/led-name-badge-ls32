@@ -9,9 +9,11 @@ info:
     This API allows you to update the text and visual content displayed on LED
     badges, including support for alphanumeric text and predefined icon codes.
 
+
     <img
     src="https://content.pstmn.io/05b1ef2c-9fd3-4f0e-8b2f-76998fb3f6e5/aW1hZ2UucG5n"
     width="240">
+
 
     ## Supported Icons
 
@@ -116,9 +118,8 @@ info:
     accordingly?
 servers:
   - url: http://127.0.0.1:5001
-
 security:
-  - apiKey: []
+  - ApiKeyAuth: []
 components:
   securitySchemes:
     apiKey:
@@ -126,13 +127,17 @@ components:
       in: header
       name: X-API-Key
       description: API key for authenticating requests to the LED Display API
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
   responses:
     InternalServerError:
       description: Internal server error
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
     ErrorResponse:
       type: object
@@ -222,10 +227,6 @@ paths:
               schema:
                 type: string
               example: close
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - display-text
       description: >-
@@ -357,7 +358,7 @@ paths:
                   - ':star:'
                   - ':sun:'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          description: Internal server error
       tags:
         - predefined-icons
       description: >-
@@ -393,6 +394,8 @@ paths:
                     description: Status of the operation
               example:
                 status: Summary displayed on LED
+        '500':
+          description: A short description of the response
       tags:
         - display-summary
       description: >-

@@ -1,6 +1,6 @@
 $kind: http-example
 request:
-  url: "{{baseUrl}}/display-text"
+  url: "{{baseUrl}}/display-summary"
   method: POST
   headers:
     - key: Content-Type
@@ -14,22 +14,15 @@ request:
     type: json
     content: |-
       {
-        "text": "Hello World! :heart:"
+        "type": "welcome",
+        "customText": "John"
       }
 response:
-  statusCode: 200
-  statusText: OK
+  statusCode: 500
+  statusText: Internal Server Error
   headers:
     Content-Type: application/json
-    Server: Werkzeug/3.1.5 Python/3.13.7
-    Date: Mon, 19 Jan 2026 12:16:21 GMT
-    Content-Length: "65"
-    Connection: close
   body:
-    type: json
-    content: |-
-      {
-        "status": "Text displayed on LED",
-        "text": "Hello World! :heart:"
-      }
-order: 1000
+    type: text
+    content: string
+order: 2000

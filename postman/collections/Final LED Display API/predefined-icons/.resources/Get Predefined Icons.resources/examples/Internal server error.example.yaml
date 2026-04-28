@@ -1,15 +1,15 @@
 $kind: http-example
 request:
-  url: "{{baseUrl}}/display-text"
-  method: POST
+  url: "{{baseUrl}}/predefined-icons"
+  method: GET
   headers:
-    - key: Content-Type
-      value: application/json
     - key: Accept
       value: application/json
     - key: X-API-Key
       value: <API Key>
       description: "Added as a part of security scheme: apikey"
+    - key: Content-Type
+      value: application/json
   body:
     type: json
     content: |-
@@ -21,10 +21,6 @@ response:
   statusText: Internal Server Error
   headers:
     Content-Type: application/json
-    Server: Werkzeug/3.1.4 Python/3.13.5
-    Date: Mon, 19 Jan 2026 12:16:58 GMT
-    Content-Length: "265"
-    Connection: close
   body:
     type: text
     content: |-
