@@ -14,6 +14,5 @@ response:
     Content-Type: application/json
   body:
     type: json
-    content: '{"success": true, "message": "Text displayed successfully", "text":
-      "Café à Paris"}'
-order: 28000
+    content: '{"success": true, "message": "Text displayed successfully", "text": "Café à Paris"}'
+order: 29000

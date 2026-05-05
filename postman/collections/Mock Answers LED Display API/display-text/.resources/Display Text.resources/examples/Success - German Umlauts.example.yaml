@@ -20,4 +20,4 @@ response:
         "message": "Display updated successfully",
         "displayedText": "Grüße aus München"
       }
-order: 8000
+order: 9000

@@ -15,7 +15,7 @@ request:
     type: json
     content: |-
       {
-        "text": "Hello World!"
+        "text": "Are you up correctly?"
       }
 response:
   statusCode: 500
@@ -28,9 +28,9 @@ response:
     Connection: close
   body:
     type: text
-    content: >-
+    content: |-
       {
         "error": "Internal Server Error",
         "details": "Probably the server has not been started with the right permissions to access the LED"
       }
-order: 53000
+order: 104000

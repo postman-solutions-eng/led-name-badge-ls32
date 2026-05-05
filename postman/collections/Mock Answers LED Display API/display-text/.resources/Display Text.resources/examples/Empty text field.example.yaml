@@ -15,4 +15,4 @@ response:
   body:
     type: json
     content: '{"success": true, "message": "Text displayed successfully", "text": ""}'
-order: 40000
+order: 41000

@@ -6,7 +6,7 @@ request:
     Content-Type: application/json
   body:
     type: json
-    content: '{"text": "Hello World"}'
+    content: '{"text": "Hello World!"}'
 response:
   statusCode: 200
   statusText: OK
@@ -18,6 +18,6 @@ response:
       {
         "success": true,
         "message": "Display updated successfully",
-        "displayedText": "Hello World"
+        "displayedText": "Hello World!"
       }
-order: 6000
+order: 7000

@@ -1,11 +1,8 @@
 $kind: http-request
-description: >-
-  Displays a predefined summary message on the LED badge. This endpoint provides
-  a quick way to show common status messages without constructing custom text.
+description: |-
+  Displays a predefined summary message on the LED badge. This endpoint provides a quick way to show common status messages without constructing custom text.
 
-
-  Note: The API does not validate the type parameter and will return success for
-  any type value provided.
+  Note: The API does not validate the type parameter and will return success for any type value provided.
 url: "{{baseUrl}}/display-summary"
 method: POST
 headers:

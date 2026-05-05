@@ -1,5 +1,5 @@
 $kind: http-example
-name: Text with heart icon code
+name: Simple text message with no special characters
 request:
   url: "{{baseUrl}}/display-text"
   method: POST
@@ -7,7 +7,7 @@ request:
     Content-Type: application/json
   body:
     type: json
-    content: '{"text": "I :heart: Postman"}'
+    content: '{"text": "Hello World"}'
 response:
   statusCode: 200
   statusText: OK
@@ -15,6 +15,5 @@ response:
     Content-Type: application/json
   body:
     type: json
-    content: '{"success": true, "message": "Text displayed successfully", "text": "I
-      :heart: Postman"}'
-order: 24000
+    content: '{"success": true, "message": "Text displayed successfully", "text": "Hello World"}'
+order: 78000

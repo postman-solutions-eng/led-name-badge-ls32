@@ -1,0 +1,19 @@
+$kind: http-example
+name: Invalid icon code - likely passes through as text
+request:
+  url: "{{baseUrl}}/display-text"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: '{"text": ":invalid: icon"}'
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: '{"success": false, "error": "Invalid input detected"}'
+order: 94000

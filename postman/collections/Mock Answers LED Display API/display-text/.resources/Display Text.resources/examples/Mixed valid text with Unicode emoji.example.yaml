@@ -15,4 +15,4 @@ response:
   body:
     type: json
     content: '{"success": false, "error": "Invalid input detected"}'
-order: 37000
+order: 38000

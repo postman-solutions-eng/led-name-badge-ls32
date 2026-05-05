@@ -14,6 +14,5 @@ response:
     Content-Type: application/json
   body:
     type: json
-    content: '{"success": true, "message": "Display updated successfully",
-      "displayedText": "Hello Adidas :star:"}'
-order: 49000
+    content: '{"success": true, "message": "Display updated successfully", "displayedText": "Hello Adidas :star:"}'
+order: 50000

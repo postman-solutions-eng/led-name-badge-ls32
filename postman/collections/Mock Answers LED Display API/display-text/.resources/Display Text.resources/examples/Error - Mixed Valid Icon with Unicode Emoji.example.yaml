@@ -14,6 +14,5 @@ response:
     Content-Type: application/json
   body:
     type: json
-    content: '{"success": false, "error": "Unicode emoji not supported. Please use
-      icon codes instead of emoji characters."}'
-order: 16000
+    content: '{"success": false, "error": "Unicode emoji not supported. Please use icon codes instead of emoji characters."}'
+order: 17000
