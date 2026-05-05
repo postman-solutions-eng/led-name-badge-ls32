@@ -68,3 +68,8 @@ instance/
 
 # Logs
 *.log
+
+node_modules/
+
+# CI: Portman writes here (not committed)
+artifacts/

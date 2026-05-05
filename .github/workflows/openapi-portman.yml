@@ -1,0 +1,123 @@
+# -----------------------------------------------------------------------------
+# Portman + Postman CLI
+#
+# Pull requests
+#   1) Portman reads the OpenAPI file and writes a Postman collection with contract tests
+#      to disk only (no collection update in Postman Cloud).
+#   2) Postman CLI logs in with POSTMAN_API_KEY and runs that local JSON; run results are sent
+#      to Postman Cloud (same pattern as other workflows: login + collection run + --report-events).
+#
+# Push to main (after merge)
+#   1) Portman generates the collection, injects contract tests, and updates the target collection
+#      in Postman Cloud (--syncPostman / -p) using POSTMAN_API_KEY.
+#   2) Postman CLI runs that collection by UID so the run uses the synced Cloud copy; results are
+#      sent to Postman Cloud the same way as on pull requests.
+#
+# Configuration (repository Variables, optional unless noted)
+#   PORTMAN_GENERATED_COLLECTION_UID — Postman collection UID for the Portman-synced contract test collection.
+#     Default in workflow: 50602431-d65b1bd9-42d8-46ed-8385-4bda3f86cadd
+#   PORTMAN_BASE_URL — passed to Portman as -b. Optional repository variable; if unset, defaults to
+#     https://16d7e73f-15b8-4fb0-87c4-fe02baff587a.mock.pstmn.io (same host as LED Display Mock Environment).
+#
+# Secrets (pull requests and main)
+#   POSTMAN_API_KEY — required for Postman CLI login (run reporting to Cloud) on every run, and for
+#     Portman --syncPostman on main. Use the same secret as postman-publish.yml.
+#     Pull requests opened from forks outside this repo do not receive secrets; those workflows will
+#     fail at login until run from a branch on this repository.
+#
+# Paths to edit for another repo: OpenAPI (-l), output (-o), and --environment below.
+# -----------------------------------------------------------------------------
+
+name: OpenAPI → Automated Portman Contract Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  portman:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # --- Pull request: local generation only, then Postman CLI on the file ---
+
+      - name: Portman — generate contract collection (local, PR)
+        if: github.event_name == 'pull_request'
+        env:
+          PORTMAN_BASE_URL: ${{ vars.PORTMAN_BASE_URL }}
+        run: |
+          mkdir -p artifacts
+          BASE="${PORTMAN_BASE_URL:-https://16d7e73f-15b8-4fb0-87c4-fe02baff587a.mock.pstmn.io}"
+          # tslib: some Portman releases omit it as a dependency when using npx.
+          npx --yes -p @apideck/portman@1.34.0 -p tslib portman \
+            -l final-led-display-api.yaml \
+            -o artifacts/openapi-contract-tests.postman.json \
+            -b "${BASE}"
+
+      # --- Main: Portman syncs the collection to Postman Cloud ---
+
+      - name: Portman — generate, sync to Postman Cloud, contract tests (main)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
+          PORTMAN_GENERATED_COLLECTION_UID: ${{ vars.PORTMAN_GENERATED_COLLECTION_UID }}
+          PORTMAN_BASE_URL: ${{ vars.PORTMAN_BASE_URL }}
+        run: |
+          test -n "${POSTMAN_API_KEY}" || { echo "POSTMAN_API_KEY secret is required on main."; exit 1; }
+          mkdir -p artifacts
+          COL_UID="${PORTMAN_GENERATED_COLLECTION_UID:-50602431-d65b1bd9-42d8-46ed-8385-4bda3f86cadd}"
+          BASE="${PORTMAN_BASE_URL:-https://16d7e73f-15b8-4fb0-87c4-fe02baff587a.mock.pstmn.io}"
+          export POSTMAN_API_KEY
+          # tslib: some Portman releases omit it as a dependency when using npx.
+          npx --yes -p @apideck/portman@1.34.0 -p tslib portman \
+            -l final-led-display-api.yaml \
+            -o artifacts/openapi-contract-tests.postman.json \
+            -b "${BASE}" \
+            --syncPostman \
+            -p "${COL_UID}" \
+            --collectionName "Portman Generated Contract Test"
+
+      - name: Upload collection artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-contract-tests-postman-collection
+          path: artifacts/openapi-contract-tests.postman.json
+
+      - name: Install Postman CLI
+        run: |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+      - name: Verify Postman CLI
+        run: postman --version
+
+      - name: Postman CLI — log in (report runs to Postman Cloud)
+        env:
+          POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
+        run: |
+          test -n "${POSTMAN_API_KEY}" || { echo "POSTMAN_API_KEY secret is required so Postman CLI can report collection runs to Postman Cloud."; exit 1; }
+          postman login --with-api-key "${POSTMAN_API_KEY}"
+
+      - name: Postman CLI — run local collection (PR)
+        if: github.event_name == 'pull_request'
+        run: |
+          postman collection run "artifacts/openapi-contract-tests.postman.json" \
+            --environment "postman/environments/LED Display Mock Environment.environment.yaml" \
+            --working-dir "${GITHUB_WORKSPACE}" \
+            --report-events
+
+      - name: Postman CLI — run cloud collection by UID (main)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          PORTMAN_GENERATED_COLLECTION_UID: ${{ vars.PORTMAN_GENERATED_COLLECTION_UID }}
+        run: |
+          COL_UID="${PORTMAN_GENERATED_COLLECTION_UID:-50602431-d65b1bd9-42d8-46ed-8385-4bda3f86cadd}"
+          postman collection run "${COL_UID}" \
+            --environment "postman/environments/LED Display Mock Environment.environment.yaml" \
+            --working-dir "${GITHUB_WORKSPACE}" \
+            --report-events
