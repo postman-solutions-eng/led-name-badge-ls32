@@ -14,6 +14,5 @@ response:
     Content-Type: application/json
   body:
     type: json
-    content: "{\"success\": true, \"message\": \"Text displayed successfully\",
-      \"text\": \"You're a :star:\"}"
-order: 18000
+    content: "{\"success\": true, \"message\": \"Text displayed successfully\", \"text\": \"You're a :star:\"}"
+order: 19000

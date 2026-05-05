@@ -14,6 +14,5 @@ response:
     Content-Type: application/json
   body:
     type: json
-    content: '{"success": true, "message": "Text displayed successfully", "text":
-      "Test!@#$%&/()=?"}'
-order: 30000
+    content: '{"success": true, "message": "Text displayed successfully", "text": "Test!@#$%&/()=?"}'
+order: 31000

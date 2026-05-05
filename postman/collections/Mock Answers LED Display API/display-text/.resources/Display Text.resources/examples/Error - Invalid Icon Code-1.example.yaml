@@ -15,6 +15,5 @@ response:
     Content-Type: application/json
   body:
     type: json
-    content: "{\"success\": false, \"error\": \"Invalid icon code ':invalid:'.
-      Supported icons: :heart:, :smile:, :star:, :ball:, :sun:\"}"
-order: 15000
+    content: "{\"success\": false, \"error\": \"Invalid icon code ':invalid:'. Supported icons: :heart:, :smile:, :star:, :ball:, :sun:\"}"
+order: 16000

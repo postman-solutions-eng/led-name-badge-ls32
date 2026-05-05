@@ -14,11 +14,11 @@ response:
     Content-Type: application/json
   body:
     type: json
-    content: >-
+    content: |-
       {
         "success": false,
         "error": "Invalid characters detected",
         "message": "Unicode emoji are not supported. Please use predefined icon codes like :heart:, :smile:, :star: instead.",
         "invalidText": "Hello 🌍 World"
       }
-order: 5000
+order: 6000

@@ -28,4 +28,4 @@ response:
         "details": "'🌍'",
         "error": "Invalid display string format"
       }
-order: 2000
+order: 3000

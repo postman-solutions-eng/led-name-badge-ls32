@@ -14,6 +14,5 @@ response:
     Content-Type: application/json
   body:
     type: json
-    content: '{"success": true, "message": "Display updated successfully", "text":
-      "Greetings from SAP :star:"}'
-order: 46000
+    content: '{"success": true, "message": "Display updated successfully", "text": "Greetings from SAP :star:"}'
+order: 47000

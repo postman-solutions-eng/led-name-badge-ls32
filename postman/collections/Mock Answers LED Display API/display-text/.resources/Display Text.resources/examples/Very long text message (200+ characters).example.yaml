@@ -6,9 +6,7 @@ request:
     Content-Type: application/json
   body:
     type: json
-    content: '{"text": "The quick brown fox jumps over the lazy dog. This is a
-      longer message to test the LED display with more content. It includes
-      multiple sentences and should still work fine with the API endpoint."}'
+    content: '{"text": "The quick brown fox jumps over the lazy dog. This is a longer message to test the LED display with more content. It includes multiple sentences and should still work fine with the API endpoint."}'
 response:
   statusCode: 200
   statusText: OK
@@ -16,8 +14,5 @@ response:
     Content-Type: application/json
   body:
     type: json
-    content: '{"success": true, "message": "Text displayed successfully", "text":
-      "The quick brown fox jumps over the lazy dog. This is a longer message to
-      test the LED display with more content. It includes multiple sentences and
-      should still work fine with the API endpoint."}'
-order: 32000
+    content: '{"success": true, "message": "Text displayed successfully", "text": "The quick brown fox jumps over the lazy dog. This is a longer message to test the LED display with more content. It includes multiple sentences and should still work fine with the API endpoint."}'
+order: 33000

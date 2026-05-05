@@ -1,6 +1,6 @@
 $kind: http-example
 request:
-  url: '{{baseUrl}}/display-text'
+  url: "{{baseUrl}}/display-text"
   method: POST
   headers:
     Content-Type: application/json
@@ -27,4 +27,4 @@ response:
         "status": "Text displayed on LED",
         "text": "Postman :heart: ABB"
       }
-order: 1000
+order: 2000

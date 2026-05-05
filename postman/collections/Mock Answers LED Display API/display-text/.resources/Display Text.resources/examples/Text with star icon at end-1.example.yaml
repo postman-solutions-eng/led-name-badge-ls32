@@ -1,5 +1,5 @@
 $kind: http-example
-name: Multiple valid icon codes
+name: Text with star icon at end
 request:
   url: "{{baseUrl}}/display-text"
   method: POST
@@ -7,7 +7,7 @@ request:
     Content-Type: application/json
   body:
     type: json
-    content: '{"text": ":ball: :sun: :heart: :smile: :star:"}'
+    content: "{\"text\": \"You're a :star:\"}"
 response:
   statusCode: 200
   statusText: OK
@@ -15,6 +15,5 @@ response:
     Content-Type: application/json
   body:
     type: json
-    content: '{"success": true, "message": "Text displayed successfully", "text":
-      ":ball: :sun: :heart: :smile: :star:"}'
-order: 21000
+    content: "{\"success\": true, \"message\": \"Text displayed successfully\", \"text\": \"You're a :star:\"}"
+order: 23000
