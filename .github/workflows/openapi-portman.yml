@@ -28,7 +28,7 @@
 # Paths to edit for another repo: OpenAPI (-l), output (-o), and --environment below.
 # -----------------------------------------------------------------------------
 
-name: OpenAPI → Postman (Portman)
+name: OpenAPI → Automated Portman Contract Tests
 
 on:
   push:
