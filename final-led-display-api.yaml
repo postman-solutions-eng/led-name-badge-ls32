@@ -346,7 +346,7 @@ paths:
         Returns a list of all available icon codes that can be used in display
         text. Icons are returned as simple string codes in the `:icon_name:`
         format.
-  /display-summary:
+  /displaySummary/:
     post:
       summary: Display Summary
       responses:
