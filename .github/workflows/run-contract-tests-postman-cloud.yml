@@ -6,13 +6,10 @@
 #   1) Local Git integration — collection and environment from repo paths under postman/.
 #   2) Postman Cloud — same collection and environment by UID from Postman Cloud.
 #
-# Reporters: cli + json on every run (-r cli,json). JSON is written to artifacts/ and uploaded
-# as workflow artifacts. --report-events sends run results to Postman Cloud when POSTMAN_API_KEY
-# is set.
-#
-# Note: JSON/JUnit/HTML reporters require HTTP collections in v2 (JSON). This repo uses v3 YAML
-# under postman/collections; if JSON export is empty or skipped, use the CLI reporter and
-# --report-events for Cloud run history.
+# Reporters:
+#   Local Git (v3 YAML / multi-protocol) — CLI only; json/junit/html are not supported.
+#   Postman Cloud (by UID) — cli + json + junit; reports uploaded as workflow artifacts.
+# --report-events sends run results to Postman Cloud when POSTMAN_API_KEY is set.
 #
 # Configuration (repository Variables, optional)
 #   LED_DISPLAY_CONTRACT_TESTS_COLLECTION_UID — Cloud collection UID.
@@ -59,20 +56,10 @@ jobs:
 
       - name: Postman CLI — run contract tests (local Git integration)
         run: |
-          mkdir -p artifacts
           postman collection run "${LOCAL_COLLECTION}" \
             --environment "${LOCAL_ENVIRONMENT}" \
             --working-dir "${GITHUB_WORKSPACE}" \
-            --report-events \
-            -r cli,json \
-            --reporter-json-export artifacts/contract-tests-local.json
-
-      - name: Upload JSON report (local Git run)
-        uses: actions/upload-artifact@v4
-        with:
-          name: contract-tests-postman-report-local
-          path: artifacts/contract-tests-local.json
-          if-no-files-found: warn
+            --report-events
 
       - name: Postman CLI — run contract tests (Postman Cloud by UID)
         env:
@@ -88,12 +75,13 @@ jobs:
             --environment "${ENV_UID}" \
             --working-dir "${GITHUB_WORKSPACE}" \
             --report-events \
-            -r cli,json \
-            --reporter-json-export artifacts/contract-tests-cloud.json
+            -r cli,json,junit \
+            --reporter-json-export artifacts/contract-tests-cloud.json \
+            --reporter-junit-export artifacts/contract-tests-cloud.xml
 
-      - name: Upload JSON report (Cloud run)
+      - name: Upload reports (Cloud run)
         uses: actions/upload-artifact@v4
         with:
-          name: contract-tests-postman-report-cloud
-          path: artifacts/contract-tests-cloud.json
+          name: contract-tests-postman-reports-cloud
+          path: artifacts/contract-tests-cloud.*
           if-no-files-found: warn
