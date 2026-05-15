@@ -9,13 +9,15 @@
 #   secrets.POSTMAN_API_KEY     → Pipeline variable POSTMAN_API_KEY (secret)
 #   vars.PORTMAN_BASE_URL       → Variable PORTMAN_BASE_URL (optional)
 #   vars.PORTMAN_GENERATED_COLLECTION_UID → PORTMAN_GENERATED_COLLECTION_UID (optional)
+#   vars.PORTMAN_ENVIRONMENT_ID → PORTMAN_ENVIRONMENT_ID (optional)
 #   GITHUB_WORKSPACE            → $(Build.SourcesDirectory)
 #   pull_request                → eq(variables['Build.Reason'], 'PullRequest')
 #   push to main                → main branch CI (not PullRequest) on refs/heads/main
 #
 # Pull requests: Portman writes artifacts/openapi-contract-tests.postman.json only;
-#   Postman CLI runs that file.
-# Main: Portman syncs to Postman Cloud (--syncPostman); Postman CLI runs by collection UID.
+#   Postman CLI runs that file with the mock environment YAML path.
+# Main: Portman syncs to Postman Cloud (--syncPostman); Postman CLI runs by collection UID
+#   with environment UID and cli + json + junit reporters.
 #
 # Optional: replace inline variables with a variable group, e.g.
 #   variables:
@@ -34,9 +36,11 @@ pr:
       - main
 
 variables:
-  # Override in Pipeline settings or a variable group; empty PORTMAN_BASE_URL uses the script default.
+  LOCAL_ENVIRONMENT: "postman/environments/LED Display Mock Environment.environment.yaml"
+  # Override in Pipeline settings or a variable group; empty values use script defaults.
   PORTMAN_BASE_URL: ""
   PORTMAN_GENERATED_COLLECTION_UID: ""
+  PORTMAN_ENVIRONMENT_ID: ""
 
 pool:
   vmImage: ubuntu-latest
@@ -113,23 +117,48 @@ steps:
   - bash: |
       set -euo pipefail
       postman collection run "artifacts/openapi-contract-tests.postman.json" \
-        --environment "postman/environments/LED Display Mock Environment.environment.yaml" \
+        --environment "${LOCAL_ENVIRONMENT}" \
         --working-dir "$(Build.SourcesDirectory)" \
         --report-events
     displayName: Postman CLI — run local collection (PR)
     condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
     env:
       POSTMAN_API_KEY: $(POSTMAN_API_KEY)
+      LOCAL_ENVIRONMENT: $(LOCAL_ENVIRONMENT)
 
   - bash: |
       set -euo pipefail
+      mkdir -p artifacts
       COL_UID="${PORTMAN_GENERATED_COLLECTION_UID:-50602431-d65b1bd9-42d8-46ed-8385-4bda3f86cadd}"
+      ENV_UID="${PORTMAN_ENVIRONMENT_ID:-41094746-b57f7bf6-e6ed-4568-86c2-bd6df6cfd3c4}"
+      echo "Collection UID: ${COL_UID}"
+      echo "Environment UID: ${ENV_UID}"
       postman collection run "${COL_UID}" \
-        --environment "postman/environments/LED Display Mock Environment.environment.yaml" \
+        --environment "${ENV_UID}" \
         --working-dir "$(Build.SourcesDirectory)" \
-        --report-events
+        --report-events \
+        -r cli,json,junit \
+        --reporter-json-export artifacts/openapi-contract-tests-cloud.json \
+        --reporter-junit-export artifacts/openapi-contract-tests-cloud.xml
     displayName: Postman CLI — run cloud collection by UID (main)
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     env:
       POSTMAN_API_KEY: $(POSTMAN_API_KEY)
       PORTMAN_GENERATED_COLLECTION_UID: $(PORTMAN_GENERATED_COLLECTION_UID)
+      PORTMAN_ENVIRONMENT_ID: $(PORTMAN_ENVIRONMENT_ID)
+
+  - task: PublishTestResults@2
+    displayName: Publish JUnit results (Portman Cloud run)
+    condition: and(succeededOrFailed(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: "$(Build.SourcesDirectory)/artifacts/openapi-contract-tests-cloud.xml"
+      testRunTitle: "OpenAPI Portman Contract Tests (Postman Cloud)"
+      failTaskOnFailedTests: true
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Postman reports (Portman Cloud run)
+    condition: and(succeededOrFailed(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    inputs:
+      targetPath: "$(Build.SourcesDirectory)/artifacts"
+      artifact: openapi-portman-postman-reports-cloud
