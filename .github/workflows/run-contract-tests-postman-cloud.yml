@@ -1,14 +1,44 @@
-name: Run LED Display Contract Tests (Postman Cloud)
+# -----------------------------------------------------------------------------
+# LED Display Contract Tests — Postman CLI
+#
+# On every trigger (push to main, pull request, manual), both runs execute in order:
+#
+#   1) Local Git integration — collection and environment from repo paths under postman/.
+#   2) Postman Cloud — same collection and environment by UID from Postman Cloud.
+#
+# Reporters: cli + json on every run (-r cli,json). JSON is written to artifacts/ and uploaded
+# as workflow artifacts. --report-events sends run results to Postman Cloud when POSTMAN_API_KEY
+# is set.
+#
+# Note: JSON/JUnit/HTML reporters require HTTP collections in v2 (JSON). This repo uses v3 YAML
+# under postman/collections; if JSON export is empty or skipped, use the CLI reporter and
+# --report-events for Cloud run history.
+#
+# Configuration (repository Variables, optional)
+#   LED_DISPLAY_CONTRACT_TESTS_COLLECTION_UID — Cloud collection UID.
+#     Default: 41094746-eab03306-4827-4edb-937c-5449e738a90b
+#   LED_DISPLAY_CONTRACT_TESTS_ENVIRONMENT_ID — Cloud environment UID (contract tests / mock).
+#     Default: 41094746-b57f7bf6-e6ed-4568-86c2-bd6df6cfd3c4
+#
+# Secrets
+#   POSTMAN_API_KEY — required for login and --report-events.
+# -----------------------------------------------------------------------------
+
+name: Run LED Display Contract Tests (Postman)
 
 on:
   push:
     branches:
       - main
   pull_request:
+  workflow_dispatch:
 
 jobs:
   contract-tests:
     runs-on: ubuntu-latest
+    env:
+      LOCAL_COLLECTION: postman/collections/LED Display Contract Tests
+      LOCAL_ENVIRONMENT: postman/environments/LED Display Mock Environment.environment.yaml
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -17,12 +47,53 @@ jobs:
         run: |
           curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
 
-      - name: Login to Postman CLI
-        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+      - name: Verify Postman CLI
+        run: postman --version
 
-      - name: Run contract tests with mock environment
+      - name: Postman CLI — log in
+        env:
+          POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
         run: |
-          postman collection run "postman/collections/LED Display Contract Tests" \
-            --environment "postman/environments/LED Display Mock Environment.environment.yaml" \
-            --working-dir "$GITHUB_WORKSPACE" \
-            --report-events
+          test -n "${POSTMAN_API_KEY}" || { echo "POSTMAN_API_KEY secret is required."; exit 1; }
+          postman login --with-api-key "${POSTMAN_API_KEY}"
+
+      - name: Postman CLI — run contract tests (local Git integration)
+        run: |
+          mkdir -p artifacts
+          postman collection run "${LOCAL_COLLECTION}" \
+            --environment "${LOCAL_ENVIRONMENT}" \
+            --working-dir "${GITHUB_WORKSPACE}" \
+            --report-events \
+            -r cli,json \
+            --reporter-json-export artifacts/contract-tests-local.json
+
+      - name: Upload JSON report (local Git run)
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-tests-postman-report-local
+          path: artifacts/contract-tests-local.json
+          if-no-files-found: warn
+
+      - name: Postman CLI — run contract tests (Postman Cloud by UID)
+        env:
+          COLLECTION_UID: ${{ vars.LED_DISPLAY_CONTRACT_TESTS_COLLECTION_UID }}
+          ENVIRONMENT_ID: ${{ vars.LED_DISPLAY_CONTRACT_TESTS_ENVIRONMENT_ID }}
+        run: |
+          mkdir -p artifacts
+          COL_UID="${COLLECTION_UID:-41094746-eab03306-4827-4edb-937c-5449e738a90b}"
+          ENV_UID="${ENVIRONMENT_ID:-41094746-b57f7bf6-e6ed-4568-86c2-bd6df6cfd3c4}"
+          echo "Collection UID: ${COL_UID}"
+          echo "Environment UID: ${ENV_UID}"
+          postman collection run "${COL_UID}" \
+            --environment "${ENV_UID}" \
+            --working-dir "${GITHUB_WORKSPACE}" \
+            --report-events \
+            -r cli,json \
+            --reporter-json-export artifacts/contract-tests-cloud.json
+
+      - name: Upload JSON report (Cloud run)
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-tests-postman-report-cloud
+          path: artifacts/contract-tests-cloud.json
+          if-no-files-found: warn
