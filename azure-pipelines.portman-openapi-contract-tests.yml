@@ -21,7 +21,7 @@
 #   variables:
 #     - group: postman-portman
 # -----------------------------------------------------------------------------
-name: OpenAPI_Portman_ContractTests_$(Date:yyyyMMdd)$(Rev:.r)
+name: OpenAPI Portman Contract Tests
 
 trigger:
   branches:
