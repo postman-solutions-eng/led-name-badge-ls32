@@ -10,12 +10,13 @@
 # Push to main (after merge)
 #   1) Portman generates the collection, injects contract tests, and updates the target collection
 #      in Postman Cloud (--syncPostman / -p) using POSTMAN_API_KEY.
-#   2) Postman CLI runs that collection by UID so the run uses the synced Cloud copy; results are
-#      sent to Postman Cloud the same way as on pull requests.
+#   2) Postman CLI runs that collection by UID with environment UID and cli + json + junit reporters.
 #
 # Configuration (repository Variables, optional unless noted)
 #   PORTMAN_GENERATED_COLLECTION_UID — Postman collection UID for the Portman-synced contract test collection.
 #     Default in workflow: 50602431-d65b1bd9-42d8-46ed-8385-4bda3f86cadd
+#   PORTMAN_ENVIRONMENT_ID — Postman environment UID for Cloud runs on main (mock).
+#     Default: 41094746-b57f7bf6-e6ed-4568-86c2-bd6df6cfd3c4
 #   PORTMAN_BASE_URL — passed to Portman as -b. Optional repository variable; if unset, defaults to
 #     https://16d7e73f-15b8-4fb0-87c4-fe02baff587a.mock.pstmn.io (same host as LED Display Mock Environment).
 #
@@ -115,9 +116,25 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           PORTMAN_GENERATED_COLLECTION_UID: ${{ vars.PORTMAN_GENERATED_COLLECTION_UID }}
+          PORTMAN_ENVIRONMENT_ID: ${{ vars.PORTMAN_ENVIRONMENT_ID }}
         run: |
+          mkdir -p artifacts
           COL_UID="${PORTMAN_GENERATED_COLLECTION_UID:-50602431-d65b1bd9-42d8-46ed-8385-4bda3f86cadd}"
+          ENV_UID="${PORTMAN_ENVIRONMENT_ID:-41094746-b57f7bf6-e6ed-4568-86c2-bd6df6cfd3c4}"
+          echo "Collection UID: ${COL_UID}"
+          echo "Environment UID: ${ENV_UID}"
           postman collection run "${COL_UID}" \
-            --environment "postman/environments/LED Display Mock Environment.environment.yaml" \
+            --environment "${ENV_UID}" \
             --working-dir "${GITHUB_WORKSPACE}" \
-            --report-events
+            --report-events \
+            -r cli,json,junit \
+            --reporter-json-export artifacts/openapi-contract-tests-cloud.json \
+            --reporter-junit-export artifacts/openapi-contract-tests-cloud.xml
+
+      - name: Upload reports (Portman Cloud run)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-portman-postman-reports-cloud
+          path: artifacts/openapi-contract-tests-cloud.*
+          if-no-files-found: warn
