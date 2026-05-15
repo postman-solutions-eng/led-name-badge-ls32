@@ -1,0 +1,114 @@
+# -----------------------------------------------------------------------------
+# Illustration: Azure Pipelines equivalent of
+# .github/workflows/run-contract-tests-postman-cloud.yml
+#
+# This file is not wired to Azure DevOps by default. In ADO: Pipelines → New
+# pipeline → select this repo → Existing Azure Pipelines YAML file → choose
+# azure-pipelines.contract-tests-postman.yml
+#
+# Map GitHub Actions → Azure DevOps
+#   secrets.POSTMAN_API_KEY → Pipeline variable POSTMAN_API_KEY (secret)
+#   vars.LED_DISPLAY_CONTRACT_TESTS_COLLECTION_UID → LED_DISPLAY_CONTRACT_TESTS_COLLECTION_UID (optional)
+#   vars.LED_DISPLAY_CONTRACT_TESTS_ENVIRONMENT_ID → LED_DISPLAY_CONTRACT_TESTS_ENVIRONMENT_ID (optional)
+#   GITHUB_WORKSPACE → $(Build.SourcesDirectory)
+#
+# On every trigger (main CI and pull requests), both runs execute in order:
+#   1) Local Git integration — v3 YAML collection from postman/ (CLI reporter only).
+#   2) Postman Cloud — collection and environment by UID (cli + json + junit reporters).
+#
+# Optional: replace inline variables with a variable group, e.g.
+#   variables:
+#     - group: postman-contract-tests
+# -----------------------------------------------------------------------------
+name: LED Display Contract Tests (Postman)
+
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+variables:
+  LOCAL_COLLECTION: "postman/collections/LED Display Contract Tests"
+  LOCAL_ENVIRONMENT: "postman/environments/LED Display Mock Environment.environment.yaml"
+  # Override in Pipeline settings or a variable group; empty values use script defaults.
+  LED_DISPLAY_CONTRACT_TESTS_COLLECTION_UID: ""
+  LED_DISPLAY_CONTRACT_TESTS_ENVIRONMENT_ID: ""
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+    displayName: Checkout repository
+
+  - bash: |
+      set -euo pipefail
+      curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+      echo "##vso[task.prependpath]$HOME/.postman-cli/bin"
+    displayName: Install Postman CLI
+
+  - bash: |
+      set -euo pipefail
+      postman --version
+    displayName: Verify Postman CLI
+
+  - bash: |
+      set -euo pipefail
+      test -n "${POSTMAN_API_KEY}" || { echo "POSTMAN_API_KEY variable (secret) is required."; exit 1; }
+      postman login --with-api-key "${POSTMAN_API_KEY}"
+    displayName: Postman CLI — log in
+    env:
+      POSTMAN_API_KEY: $(POSTMAN_API_KEY)
+
+  - bash: |
+      set -euo pipefail
+      postman collection run "${LOCAL_COLLECTION}" \
+        --environment "${LOCAL_ENVIRONMENT}" \
+        --working-dir "$(Build.SourcesDirectory)" \
+        --report-events
+    displayName: Postman CLI — run contract tests (local Git integration)
+    env:
+      POSTMAN_API_KEY: $(POSTMAN_API_KEY)
+      LOCAL_COLLECTION: $(LOCAL_COLLECTION)
+      LOCAL_ENVIRONMENT: $(LOCAL_ENVIRONMENT)
+
+  - bash: |
+      set -euo pipefail
+      mkdir -p artifacts
+      COL_UID="${LED_DISPLAY_CONTRACT_TESTS_COLLECTION_UID:-41094746-eab03306-4827-4edb-937c-5449e738a90b}"
+      ENV_UID="${LED_DISPLAY_CONTRACT_TESTS_ENVIRONMENT_ID:-41094746-b57f7bf6-e6ed-4568-86c2-bd6df6cfd3c4}"
+      echo "Collection UID: ${COL_UID}"
+      echo "Environment UID: ${ENV_UID}"
+      postman collection run "${COL_UID}" \
+        --environment "${ENV_UID}" \
+        --working-dir "$(Build.SourcesDirectory)" \
+        --report-events \
+        -r cli,json,junit \
+        --reporter-json-export artifacts/contract-tests-cloud.json \
+        --reporter-junit-export artifacts/contract-tests-cloud.xml
+    displayName: Postman CLI — run contract tests (Postman Cloud by UID)
+    env:
+      POSTMAN_API_KEY: $(POSTMAN_API_KEY)
+      LED_DISPLAY_CONTRACT_TESTS_COLLECTION_UID: $(LED_DISPLAY_CONTRACT_TESTS_COLLECTION_UID)
+      LED_DISPLAY_CONTRACT_TESTS_ENVIRONMENT_ID: $(LED_DISPLAY_CONTRACT_TESTS_ENVIRONMENT_ID)
+
+  - task: PublishTestResults@2
+    displayName: Publish JUnit results (Cloud run)
+    condition: succeededOrFailed()
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: "$(Build.SourcesDirectory)/artifacts/contract-tests-cloud.xml"
+      testRunTitle: "LED Display Contract Tests (Postman Cloud)"
+      failTaskOnFailedTests: true
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Postman reports (Cloud run)
+    condition: succeededOrFailed()
+    inputs:
+      targetPath: "$(Build.SourcesDirectory)/artifacts"
+      artifact: contract-tests-postman-reports-cloud
