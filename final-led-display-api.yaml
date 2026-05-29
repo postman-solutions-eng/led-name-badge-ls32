@@ -392,20 +392,129 @@ paths:
                   status:
                     type: string
                     description: Status of the operation
-              example:
-                status: Summary displayed on LED
+                  source:
+                    type: string
+                    description: >-
+                      Present when a Postman API key was supplied. Indicates the
+                      summary was built from the Postman API catalog.
+                    enum:
+                      - postman-api-catalog
+                  text:
+                    type: string
+                    description: The text rendered on the LED badge
+                  systemEnvironment:
+                    type: object
+                    description: >-
+                      The API catalog system environment used to list services
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                  serviceCount:
+                    type: integer
+                    description: Number of services returned for the summary
+                  hasMore:
+                    type: boolean
+                    description: >-
+                      True when additional catalog services exist beyond the
+                      fetched page
+                  services:
+                    type: array
+                    description: Catalog services included in the summary
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        name:
+                          type: string
+                        status:
+                          type: string
+                          enum:
+                            - healthy
+                            - warning
+                            - critical
+                            - inactive
+              examples:
+                defaultSummary:
+                  summary: Default summary without Postman API key
+                  value:
+                    status: Summary displayed on LED
+                catalogSummary:
+                  summary: Summary built from the Postman API catalog
+                  value:
+                    status: Summary displayed on LED
+                    source: postman-api-catalog
+                    text: 'Production - 3 svcs (2 ok, 1 warn) :star:'
+                    systemEnvironment:
+                      id: e34d6213-509d-4b61-94da-8b8c093cb925
+                      name: Production
+                    serviceCount: 3
+                    hasMore: false
+                    services:
+                      - id: 11111111-1111-1111-1111-111111111111
+                        name: payments-api
+                        status: healthy
+                      - id: 22222222-2222-2222-2222-222222222222
+                        name: billing-api
+                        status: warning
+                      - id: 33333333-3333-3333-3333-333333333333
+                        name: users-api
+                        status: healthy
+        '400':
+          description: Invalid display string format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Postman API key is invalid or unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No API catalog system environments found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: A short description of the response
+        '502':
+          description: Postman API catalog request failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - display-summary
       description: >-
-        Displays a predefined summary message on the LED badge. This endpoint
-        provides a quick way to show common status messages without constructing
-        custom text.
+        Displays a summary message on the LED badge.
 
 
-        Note: The API does not validate the type parameter and will return
+        Without a Postman API key, shows the built-in demo summary text. When
+        `X-Postman-API-Key` (or `postmanApiKey` in the body) is provided, the
+        endpoint fetches services from the [Postman API
+        Catalog](https://learning.postman.com/docs/api-catalog/overview) and
+        renders a compact health summary on the badge.
+
+
+        Note: The API does not validate the `type` parameter and will return
         success for any type value provided.
+      parameters:
+        - name: X-Postman-API-Key
+          in: header
+          required: false
+          description: >-
+            Optional Postman API key (`PMAK-...`). When set, the summary is
+            built from services in your API catalog instead of the default
+            message.
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -420,6 +529,26 @@ paths:
                 customText:
                   type: string
                   description: Optional custom text to append to the summary
-            example:
-              type: welcome
-              customText: John
+                postmanApiKey:
+                  type: string
+                  description: >-
+                    Optional alternative to the `X-Postman-API-Key` header for
+                    supplying a Postman API key
+                systemEnvironmentId:
+                  type: string
+                  format: uuid
+                  description: >-
+                    Optional API catalog system environment ID. When omitted, the
+                    first production environment is used, otherwise the first
+                    environment with associations, otherwise the first available
+                    environment.
+            examples:
+              defaultSummary:
+                summary: Default demo summary
+                value:
+                  type: welcome
+                  customText: John
+              catalogSummary:
+                summary: API catalog summary
+                value:
+                  systemEnvironmentId: e34d6213-509d-4b61-94da-8b8c093cb925

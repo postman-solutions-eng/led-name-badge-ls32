@@ -459,7 +459,8 @@ This project exposes a small HTTP API used to send text to the LED badge (or to 
 
 - POST `/display-summary`
     - Displays the demo summary text used by the project.
-    - Success: `200` with `{"status": "Summary displayed on LED"}`
+    - Without a Postman API key: `200` with `{"status": "Summary displayed on LED"}`
+    - With `X-Postman-API-Key` header (or `postmanApiKey` in the JSON body): fetches services from the Postman API Catalog and displays a compact health summary on the badge, returning catalog metadata in the response.
 
 Notes:
 - The API accepts only the `text` payload for display updates; other display settings (mode, speed, color, brightness) are controlled by the server and the real device. The mock enforces the same defaults used by the API: `mode=left`, `speed=4`, `color=red`.

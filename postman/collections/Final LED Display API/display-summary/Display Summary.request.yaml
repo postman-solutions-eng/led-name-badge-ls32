@@ -1,7 +1,11 @@
 $kind: http-request
 description: >-
-  Displays a predefined summary message on the LED badge. This endpoint provides
-  a quick way to show common status messages without constructing custom text.
+  Displays a summary message on the LED badge.
+
+
+  Without a Postman API key, shows the built-in demo summary. Pass
+  `X-Postman-API-Key` (or `postmanApiKey` in the body) to fetch services from
+  the Postman API Catalog and display a compact health summary instead.
 
 
   Note: The API does not validate the type parameter and will return success for
