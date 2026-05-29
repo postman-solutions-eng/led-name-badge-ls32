@@ -1,0 +1,16 @@
+$kind: http-request
+description: Mock response for displaying a summary built from the Postman API Catalog.
+url: "{{baseUrl}}/display-summary"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+  X-Postman-API-Key: "{{postmanApiKey}}"
+body:
+  type: json
+  content: |-
+    {
+      "systemEnvironmentId": "{{systemEnvironmentId}}"
+    }
+examples: ./.resources/Display Summary from API Catalog.resources/examples
+order: 2000

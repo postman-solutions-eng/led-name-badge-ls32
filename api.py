@@ -1,5 +1,6 @@
 from flask import Flask, request
 from lednamebadge import SimpleTextAndIcons, LedNameBadge
+from postman_catalog import PostmanCatalogError, fetch_catalog_summary
 from array import array
 
 import argparse
@@ -7,6 +8,8 @@ import threading
 import queue
 import importlib.util
 import os
+
+DEFAULT_SUMMARY = "Open LED Badge - Free, hackable, and fun! :star: :heart:"
 
 app = Flask(__name__)
 
@@ -65,9 +68,27 @@ def get_predefined_icons():
     return {'icons': icons}, 200
 
 
+def _get_postman_api_key(data):
+    return request.headers.get('X-Postman-API-Key') or (data or {}).get('postmanApiKey')
+
+
 @app.route('/display-summary', methods=['POST'])
 def display_summary():
-    summary = "Open LED Badge - Free, hackable, and fun! :star: :heart:"
+    data = request.get_json(silent=True) or {}
+    postman_api_key = _get_postman_api_key(data)
+    catalog_summary = None
+
+    if postman_api_key:
+        try:
+            catalog_summary = fetch_catalog_summary(
+                postman_api_key,
+                data.get('systemEnvironmentId'),
+            )
+            summary = catalog_summary['text']
+        except PostmanCatalogError as e:
+            return {'error': 'Failed to fetch API catalog', 'details': str(e)}, e.status_code
+    else:
+        summary = DEFAULT_SUMMARY
 
     try:
         creator = SimpleTextAndIcons()
@@ -78,7 +99,17 @@ def display_summary():
     global _API_COMMAND_QUEUE, _API_WRITE_HARDWARE
     _process_and_write(summary, command_queue=globals().get('_API_COMMAND_QUEUE'), write_hardware=globals().get('_API_WRITE_HARDWARE', True))
 
-    return {'status': 'Summary displayed on LED'}, 200
+    response = {'status': 'Summary displayed on LED'}
+    if catalog_summary is not None:
+        response.update({
+            'source': 'postman-api-catalog',
+            'text': summary,
+            'systemEnvironment': catalog_summary['systemEnvironment'],
+            'serviceCount': catalog_summary['serviceCount'],
+            'services': catalog_summary['services'],
+            'hasMore': catalog_summary['hasMore'],
+        })
+    return response, 200
 
 
 def _load_mock_console_module():

@@ -1,0 +1,17 @@
+$kind: http-request
+name: Display Summary from API Catalog
+description: Displays a summary built from services in the Postman API Catalog. Requires a valid Postman API key in the `X-Postman-API-Key` header or `postmanApiKey` body field.
+url: "{{baseUrl}}/display-summary"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+  X-Postman-API-Key: "{{vault:postmanApiKey}}"
+body:
+  type: json
+  content: |-
+    {
+      "systemEnvironmentId": "{{systemEnvironmentId}}"
+    }
+examples: ./.resources/Display Summary from API Catalog.resources/examples
+order: 2000

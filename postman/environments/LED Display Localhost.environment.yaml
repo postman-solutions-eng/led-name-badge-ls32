@@ -1,6 +1,8 @@
 name: LED Display Localhost
 values:
   - key: baseUrl
-    value: http://localhost:5001
-    enabled: true
-color: null
+    value: 'http://localhost:5001'
+  - key: systemEnvironmentId
+    value: |
+      f54b15e9-9bf3-4514-a5b8-c76310d4c8bd
+color: 0
