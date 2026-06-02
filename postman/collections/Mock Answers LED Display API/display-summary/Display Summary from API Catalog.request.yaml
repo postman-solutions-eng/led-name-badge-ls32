@@ -5,7 +5,7 @@ method: POST
 headers:
   Content-Type: application/json
   Accept: application/json
-  X-Postman-API-Key: "{{postmanApiKey}}"
+  X-API-Key: "{{postmanApiKey}}"
 body:
   type: json
   content: |-

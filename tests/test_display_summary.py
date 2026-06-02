@@ -27,7 +27,23 @@ class TestDisplaySummary(TestCase):
         write_mock.assert_called_once()
         self.assertEqual(write_mock.call_args.args[0], DEFAULT_SUMMARY)
 
-    def test_display_summary_with_postman_key_uses_catalog(self):
+    def test_display_summary_with_empty_api_key_uses_default(self):
+        with patch('api._process_and_write') as write_mock, patch(
+            'api.fetch_catalog_summary',
+        ) as fetch_mock:
+            response = self.client.post(
+                '/display-summary',
+                headers={'X-API-Key': '   '},
+                json={'apiKey': ''},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json(), {'status': 'Summary displayed on LED'})
+        fetch_mock.assert_not_called()
+        write_mock.assert_called_once()
+        self.assertEqual(write_mock.call_args.args[0], DEFAULT_SUMMARY)
+
+    def test_display_summary_with_api_key_uses_catalog(self):
         catalog_summary = {
             'text': 'Production - 2 svcs (2 ok) :star:',
             'systemEnvironment': {'id': 'env-1', 'name': 'Production'},
@@ -43,7 +59,7 @@ class TestDisplaySummary(TestCase):
         ) as write_mock:
             response = self.client.post(
                 '/display-summary',
-                headers={'X-Postman-API-Key': 'PMAK-test'},
+                headers={'X-API-Key': 'PMAK-test'},
                 json={'systemEnvironmentId': 'env-1'},
             )
 
@@ -64,7 +80,7 @@ class TestDisplaySummary(TestCase):
         ):
             response = self.client.post(
                 '/display-summary',
-                headers={'X-Postman-API-Key': 'bad-key'},
+                headers={'X-API-Key': 'bad-key'},
                 json={},
             )
 

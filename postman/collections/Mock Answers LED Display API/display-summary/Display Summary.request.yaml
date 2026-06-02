@@ -3,7 +3,7 @@ description: |-
   Displays a summary message on the LED badge.
 
   Without a Postman API key, shows the built-in demo summary. Pass
-  `X-Postman-API-Key` to fetch services from the Postman API Catalog instead.
+  `X-API-Key` to fetch services from the Postman API Catalog instead.
 
   Note: The API does not validate the type parameter and will return success for any type value provided.
 url: "{{baseUrl}}/display-summary"

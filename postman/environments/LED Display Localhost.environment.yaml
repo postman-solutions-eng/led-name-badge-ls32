@@ -5,4 +5,6 @@ values:
   - key: systemEnvironmentId
     value: |
       f54b15e9-9bf3-4514-a5b8-c76310d4c8bd
-color: 0
+  - key: ledAPIKey
+    value: '{{vault:postmanApiKey}}'
+color: 120
