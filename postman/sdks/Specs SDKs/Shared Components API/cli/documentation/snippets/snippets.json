@@ -1,0 +1,20 @@
+{
+  "endpoints": {
+    "/display-text": {
+      "post": "led-display-api display-text create-display-text --body '{\"text\":\"text\"}'\n"
+    },
+    "/predefined-icons": {
+      "get": "led-display-api predefined-icons get-predefined-icons\n"
+    },
+    "/display-summary": {
+      "post": "led-display-api display-summary create-display-summary --body '{\"type\":\"type\",\"customText\":\"customText\",\"apiKey\":\"apiKey\",\"systemEnvironmentId\":\"e8f94f60-f018-425a-afdd-dfbec894def8\"}'\n"
+    }
+  },
+  "example": "led-display-api predefined-icons get-predefined-icons\n",
+  "authentication": {
+    "apiKey": {
+      "constructor": "export LED_DISPLAY_API_API_KEY=\"YOUR-API-KEY\"\nled-display-api <command>",
+      "setter": "led-display-api config set api_key \"YOUR-API-KEY\""
+    }
+  }
+}

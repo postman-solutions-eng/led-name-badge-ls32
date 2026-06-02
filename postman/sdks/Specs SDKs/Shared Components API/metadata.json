@@ -1,0 +1,24 @@
+{
+  "entityId": "L1VzZXJzL2pvaGFubmVzLm5pY29sYWlAcG9zdG1hbi5jb20vbGVkLWRpc3BsYXktZGVtby9zaGFyZWQtY29tcG9uZW50cy1hcGkueWFtbA",
+  "entityType": "specs",
+  "buildId": 9956,
+  "createdAt": "2026-06-02T16:30:30.422Z",
+  "downloads": [
+    {
+      "language": "cli",
+      "status": "success",
+      "createdAt": "2026-06-02T16:30:30.432Z",
+      "link": "https://us-prod-sdk-gen-api-code-gen-uploads.s3.us-east-1.amazonaws.com/7fdc0655-fec2-4c8b-90dd-d83a249f74c5/led-display-api-cli-1.0.0.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LJBU7CM6RBHRY%2F20260602%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260602T163035Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEGEaCXVzLWVhc3QtMSJHMEUCIQCeYStuMBMfO%2FQlRe5TmWR5Lx%2FV0RMonXpA%2F4vy648V%2FwIgMqKmqNarJFTL2iIfGkIWDVd8iT%2BXC%2F75FA1p%2Fhr3wlkqkwUIKRAAGgw2Mzc0MjM2NTIxNTgiDMHmn29KKd%2FlALTvnirwBBb7WIN%2Furb2o55cbaOgi4r6NNNgwO%2FdfP4st4sz0fxBOtlD3C1CNxNMztIRnobHKgCawR12h4vjsS69%2FhA6QS8pmxOpc5CJWC9lt5BRsFRD09lovpjyAt0xgWbKcjP1XYPRpsydjR2JcznBLiubtOTmTErqBxOdonKePqVFdjThvl4U7S9JpqR%2FlpuMCxQwyYHXB%2FwlLp0hy9MYP7aOSTH%2Ft3%2FIQ4p6H%2BpBgvQ3Bw3082JkMjqa0%2BM1xLd9P0NWzKhmSI9wnZd6uKMXoxmjMQGpS4Zd71Q3WAa2o9lUZTh4zobDWNIqDWSdrArlmxfqkdiPHILyJvV3UtSV3aYAsDYCjpG4kSj5kT9Wd5hqlRNSWz210UMrkOG9G0IPZ7U8YCOGBR53zo9zCEDygnEbdN8ddid2dpKxbYRn2lgAddI%2BN0XwtJr9BvL6oBjW0ZXdDvNrpgrm2pB%2BD4KdgMTqulW6FkUH%2F3%2F3pNazpGLBsTwxwNSEU9xHMhG03g%2Fb%2Bb4n2ce%2BElxR2EICkRnb50iTssAHlMYXdxVvAxkceyI9Q%2BTO2IuFAR8tlp8WOj1EHoL6ygAAvXLofJY8%2BcXkkhv9YGeQa%2Br9La%2FmDHSdZbwHwyxvicrIBrboLhkylI887XK230yXsS2o8AsJhyfKDvNTJepebK3Ytsz9AhhwsR2ShiCc2F9Wm4OzdRAq2QDhRdlTHBsdapQuhNmFlj3e0frQm7c%2FW1Tp%2Fy%2FT%2FcHLpG%2B%2FhUScu3RSUriTZSx%2FD34BTn9nDYpRSrVYU%2BOb%2FYRhyM7brWJtfBhwn8Rs8m6n%2BMMYhd0khxPpwJ48TJXpE3FwiP3r0DDMhfzQBjqZASKMm4s0jKV9pvAsdMeN75uIGPXRTaLaWoPf24CsZVMk18Z%2BRSVFnDkN1RM4NG%2BgmbqZ8wnTc4xlwGDooVr%2Fs4SIIlKDEooqLv64BOiPbQ7AF%2Fs0tioGhVcjduHO8FVmTN%2BkUMVJLtd8cyud%2B7dDQhIJEJ8BRzxBOZVoNd1IkTz8hvJMCEGqa83jfTaX%2BXSttUxBREBBKuXyBw%3D%3D&X-Amz-Signature=f7578a2e121f96ee6b22281da09c29f817073a9f428c2a2229ecc8c9308611d0&X-Amz-SignedHeaders=host&x-id=GetObject",
+      "contentHash": "86727529b8ba725d2e7080707d0bf60817ee13d6acedbb2c27de5336b6832567",
+      "logs": [
+        {
+          "message": "Schema reference not found: https://components.pstmn.io/automotive-demo/RFC-9457-Error/RFC-9457-Error-2.0#/components/schemas/ProblemDetails. Using placeholder schema instead.",
+          "severity": "WARN",
+          "path": "Schema Processing",
+          "createdAt": "2026-06-02T16:30:35.236Z"
+        }
+      ]
+    }
+  ],
+  "sdkName": "led-display-api"
+}
