@@ -99,4 +99,4 @@ auth:
   credentials:
     key: X-API-Key
     in: header
-    value: "{{vault:postmanApiKey}}"
+    value: "{{ledAPIKey}}"

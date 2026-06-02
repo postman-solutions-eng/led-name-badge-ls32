@@ -1,0 +1,10 @@
+name: LED Display Production
+values:
+  - key: baseUrl
+    value: 'http://localhost:5001'
+  - key: systemEnvironmentId
+    value: |
+      b352c3fe-8a70-484d-a81a-84c2d1d900b0
+  - key: ledAPIKey
+    value: '{{vault:postmanAPIKeyCatalog}}'
+color: 0
