@@ -1,12 +1,16 @@
 $kind: http-request
 name: Display Summary from API Catalog
-description: Displays a summary built from services in the Postman API Catalog. Requires a valid Postman API key in the `X-Postman-API-Key` header or `postmanApiKey` body field.
+description: Displays a summary built from services in the Postman API Catalog. Requires a valid Postman API key in the `X-API-Key` header or `apiKey` body field.
 url: "{{baseUrl}}/display-summary"
 method: POST
 headers:
   Content-Type: application/json
   Accept: application/json
-  X-Postman-API-Key: "{{vault:postmanApiKey}}"
+auth:
+  type: apikey
+  credentials:
+    value: "{{vault:postmanApiKey}}"
+    key: X-API-Key
 body:
   type: json
   content: |-

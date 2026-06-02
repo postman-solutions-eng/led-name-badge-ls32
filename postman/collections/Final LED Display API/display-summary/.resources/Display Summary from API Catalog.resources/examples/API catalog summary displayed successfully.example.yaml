@@ -7,7 +7,7 @@ request:
       value: application/json
     - key: Accept
       value: application/json
-    - key: X-Postman-API-Key
+    - key: X-API-Key
       value: <PMAK-your-api-key>
   body:
     type: json

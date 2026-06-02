@@ -68,20 +68,23 @@ def get_predefined_icons():
     return {'icons': icons}, 200
 
 
-def _get_postman_api_key(data):
-    return request.headers.get('X-Postman-API-Key') or (data or {}).get('postmanApiKey')
+def _get_api_key(data):
+    key = request.headers.get('X-API-Key') or (data or {}).get('apiKey')
+    if isinstance(key, str):
+        key = key.strip()
+    return key or None
 
 
 @app.route('/display-summary', methods=['POST'])
 def display_summary():
     data = request.get_json(silent=True) or {}
-    postman_api_key = _get_postman_api_key(data)
+    api_key = _get_api_key(data)
     catalog_summary = None
 
-    if postman_api_key:
+    if api_key:
         try:
             catalog_summary = fetch_catalog_summary(
-                postman_api_key,
+                api_key,
                 data.get('systemEnvironmentId'),
             )
             summary = catalog_summary['text']

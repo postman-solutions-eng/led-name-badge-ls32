@@ -1,4 +1,5 @@
 $kind: collection
+name: Final LED Display API
 description: |-
   # API for controlling LED name badge displays
 
@@ -94,9 +95,8 @@ description: |-
 variables:
   baseUrl: http://127.0.0.1:5001
 auth:
-  - id: f07e8a36-9f85-4646-9b55-49309fb8655b
-    type: apikey
-    name: apikey auth
-    credentials:
-      key: X-API-Key
-      in: header
+  type: apikey
+  credentials:
+    key: X-API-Key
+    in: header
+    value: "{{vault:postmanApiKey}}"

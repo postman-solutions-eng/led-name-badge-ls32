@@ -125,7 +125,10 @@ components:
       type: apiKey
       in: header
       name: X-API-Key
-      description: API key for authenticating requests to the LED Display API
+      description: >-
+        API key for requests to the LED Display API. On `/display-summary`, when
+        set, also used to fetch services from the Postman API Catalog; when
+        omitted or empty, the default demo summary is shown.
   responses:
     InternalServerError:
       description: Internal server error
@@ -493,24 +496,14 @@ paths:
         Displays a summary message on the LED badge.
 
 
-        Without a Postman API key, shows the built-in demo summary text. When
-        `X-Postman-API-Key` (or `postmanApiKey` in the body) is provided, the
-        endpoint fetches services from the Postman API Catalog and renders a
-        compact health summary on the badge.
+        Without an API key (`X-API-Key` header or `apiKey` in the body), shows
+        the built-in demo summary text. When a key is provided, the endpoint
+        fetches services from the Postman API Catalog and renders a compact
+        health summary on the badge.
 
 
         Note: The API does not validate the `type` parameter and will return
         success for any type value provided.
-      parameters:
-        - name: X-Postman-API-Key
-          in: header
-          required: false
-          description: >-
-            Optional Postman API key (`PMAK-...`). When set, the summary is
-            built from services in your API catalog instead of the default
-            message.
-          schema:
-            type: string
       requestBody:
         content:
           application/json:
@@ -525,11 +518,11 @@ paths:
                 customText:
                   type: string
                   description: Optional custom text to append to the summary
-                postmanApiKey:
+                apiKey:
                   type: string
                   description: >-
-                    Optional alternative to the `X-Postman-API-Key` header for
-                    supplying a Postman API key
+                    Optional alternative to the `X-API-Key` header for supplying
+                    a Postman API key (`PMAK-...`) used to fetch the API catalog
                 systemEnvironmentId:
                   type: string
                   format: uuid
