@@ -25,6 +25,18 @@ RATE_LIMIT_WINDOW = 60     # ... per this many seconds
 _rate_hits = defaultdict(deque)
 _rate_lock = threading.Lock()
 
+# Default page size for GET /predefined-icons (exceeds the built-in catalog, so
+# the full list is returned unless the caller narrows it with limit/offset).
+DEFAULT_ICON_LIMIT = 100
+
+# CORS: this is a public demo API, so allow any origin.
+CORS_HEADERS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, X-API-Key',
+    'Access-Control-Max-Age': '86400',
+}
+
 app = Flask(__name__)
 
 # How many real pixels each LED dot becomes in the rendered PNG.
@@ -40,6 +52,20 @@ _TRUTHY = {'1', 'true', 'yes', 'on'}
 
 def _wants_truthy(value):
     return isinstance(value, str) and value.strip().lower() in _TRUTHY
+
+
+def _parse_int_arg(name, default, minimum=0):
+    """Parse a non-negative integer query arg, raising ValueError on bad input."""
+    raw = request.args.get(name)
+    if raw is None or raw == '':
+        return default
+    try:
+        value = int(raw)
+    except (TypeError, ValueError):
+        raise ValueError(f"'{name}' must be an integer")
+    if value < minimum:
+        raise ValueError(f"'{name}' must be >= {minimum}")
+    return value
 
 
 def _icon_to_png_base64(data, cols, scale=ICON_SCALE):
@@ -99,6 +125,10 @@ def _client_key():
 
 @app.before_request
 def _enforce_rate_limit():
+    # CORS preflight and the health probe are exempt so monitors / browsers
+    # never get throttled.
+    if request.method == 'OPTIONS' or request.path == '/health':
+        return
     now = time.time()
     key = _client_key()
     with _rate_lock:
@@ -131,6 +161,17 @@ def _add_standard_headers(response):
         response.headers['X-RateLimit-Remaining'] = str(g.rate_remaining)
     if hasattr(g, 'rate_reset'):
         response.headers['X-RateLimit-Reset'] = str(g.rate_reset)
+
+    # CORS for browser-based agents.
+    for header, value in CORS_HEADERS.items():
+        response.headers.setdefault(header, value)
+
+    # Cache-Control: the icon list / health are cacheable; display actions and
+    # errors must never be cached.
+    if request.path in ('/predefined-icons', '/health') and response.status_code < 400:
+        response.headers.setdefault('Cache-Control', 'public, max-age=3600')
+    else:
+        response.headers.setdefault('Cache-Control', 'no-store')
     return response
 
 
@@ -220,6 +261,12 @@ def display_text():
     return {'status': 'Text displayed on LED', 'text': text}, 200
 
 
+@app.route('/health', methods=['GET'])
+def health():
+    """Liveness probe. Public, un-throttled, cacheable."""
+    return {'status': 'ok', 'version': API_VERSION}, 200
+
+
 @app.route('/predefined-icons', methods=['GET'])
 def get_predefined_icons():
     # The rendered PNG previews (`meta`) are opt-in: they are large and most
@@ -227,15 +274,32 @@ def get_predefined_icons():
     # them. By default the `meta` field is omitted entirely.
     include_meta = _wants_truthy(request.args.get('meta'))
 
+    # Pagination: `limit` (default DEFAULT_ICON_LIMIT) and `offset` (default 0)
+    # let callers page through the catalog. `total` is always returned.
+    try:
+        limit = _parse_int_arg('limit', DEFAULT_ICON_LIMIT, minimum=1)
+        offset = _parse_int_arg('offset', 0, minimum=0)
+    except ValueError as e:
+        return _error('Invalid query parameter', e, 400)
+
     try:
         creator = SimpleTextAndIcons()
-        icons = [f':{name}:' for name in creator.bitmap_named.keys()]
+        all_items = list(creator.bitmap_named.items())
+        total = len(all_items)
+        page = all_items[offset:offset + limit]
+
         # Envelope carries `status` for consistency with the other endpoints.
-        response = {'status': 'Predefined icons retrieved', 'icons': icons}
+        response = {
+            'status': 'Predefined icons retrieved',
+            'total': total,
+            'limit': limit,
+            'offset': offset,
+            'icons': [f':{name}:' for name, _entry in page],
+        }
         if include_meta:
             response['meta'] = [
                 {'name': name, 'image': _icon_to_png_base64(data, cols)}
-                for name, (data, cols, _ctrl) in creator.bitmap_named.items()
+                for name, (data, cols, _ctrl) in page
             ]
         return response, 200
     except Exception as e:
