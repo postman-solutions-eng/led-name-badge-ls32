@@ -8,10 +8,58 @@ import threading
 import queue
 import importlib.util
 import os
+import base64
+import struct
+import zlib
 
 DEFAULT_SUMMARY = "Open LED Badge - Free, hackable, and fun! :star: :heart:"
 
 app = Flask(__name__)
+
+# How many real pixels each LED dot becomes in the rendered PNG.
+# Bump this for biggg pictures.
+ICON_SCALE = 64
+ICON_ON_COLOR = (0, 255, 0)
+ICON_OFF_COLOR = (0, 0, 0)
+
+
+def _icon_to_png_base64(data, cols, scale=ICON_SCALE):
+    """Render an 11-row LED icon bitmap to a scaled-up PNG data URI.
+
+    Icon bitmaps store `cols` byte-columns of 11 bytes each; each byte is a
+    horizontal strip of 8 pixels with the most significant bit on the left.
+    """
+    rows = 11
+    width = 8 * cols
+    out_width = width * scale
+    out_height = rows * scale
+
+    # Build raw RGB scanlines (each prefixed by a 0 filter byte).
+    raw = bytearray()
+    for y in range(rows):
+        line = bytearray()
+        for x in range(width):
+            block = x // 8
+            bit = x % 8
+            index = block * rows + y
+            byte = data[index] if index < len(data) else 0
+            color = ICON_ON_COLOR if (byte & (0x80 >> bit)) else ICON_OFF_COLOR
+            line.extend(bytes(color) * scale)
+        for _ in range(scale):
+            raw.append(0)
+            raw.extend(line)
+
+    def _chunk(tag, body):
+        return (struct.pack('>I', len(body)) + tag + body
+                + struct.pack('>I', zlib.crc32(tag + body) & 0xffffffff))
+
+    ihdr = struct.pack('>IIBBBBB', out_width, out_height, 8, 2, 0, 0, 0)
+    png = (b'\x89PNG\r\n\x1a\n'
+           + _chunk(b'IHDR', ihdr)
+           + _chunk(b'IDAT', zlib.compress(bytes(raw), 9))
+           + _chunk(b'IEND', b''))
+
+    return 'data:image/png;base64,' + base64.b64encode(png).decode('ascii')
 
 
 def _process_and_write(text, command_queue=None, write_hardware=True):
@@ -65,7 +113,11 @@ def display_text():
 def get_predefined_icons():
     creator = SimpleTextAndIcons()
     icons = [f':{name}:' for name in creator.bitmap_named.keys()]
-    return {'icons': icons}, 200
+    meta = [
+        {'name': name, 'image': _icon_to_png_base64(data, cols)}
+        for name, (data, cols, _ctrl) in creator.bitmap_named.items()
+    ]
+    return {'icons': icons, 'meta': meta}, 200
 
 
 def _get_api_key(data):
