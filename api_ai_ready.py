@@ -1,7 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, make_response, g
 from lednamebadge import SimpleTextAndIcons, LedNameBadge
 from postman_catalog import PostmanCatalogError, fetch_catalog_summary
 from array import array
+from collections import defaultdict, deque
 
 import argparse
 import threading
@@ -11,8 +12,18 @@ import os
 import base64
 import struct
 import zlib
+import time
 
 DEFAULT_SUMMARY = "Open LED Badge - Free, hackable, and fun! :star: :heart:"
+
+# Version advertised on every response via the X-API-Version header.
+API_VERSION = '1.1.0'
+
+# Simple in-process fixed-window rate limiter (per client, no external deps).
+RATE_LIMIT_MAX = 60        # max requests ...
+RATE_LIMIT_WINDOW = 60     # ... per this many seconds
+_rate_hits = defaultdict(deque)
+_rate_lock = threading.Lock()
 
 app = Flask(__name__)
 
@@ -75,6 +86,54 @@ def _error(message, details, status):
     return {'error': message, 'details': str(details)}, status
 
 
+# --- Rate limiting + standard headers ------------------------------------
+# A fixed-window limiter keyed by client IP. On overflow it returns a JSON 429
+# with a Retry-After header so an agent knows to back off instead of hammering.
+
+def _client_key():
+    forwarded = request.headers.get('X-Forwarded-For')
+    if forwarded:
+        return forwarded.split(',')[0].strip()
+    return request.remote_addr or 'unknown'
+
+
+@app.before_request
+def _enforce_rate_limit():
+    now = time.time()
+    key = _client_key()
+    with _rate_lock:
+        hits = _rate_hits[key]
+        cutoff = now - RATE_LIMIT_WINDOW
+        while hits and hits[0] <= cutoff:
+            hits.popleft()
+        if len(hits) >= RATE_LIMIT_MAX:
+            reset_in = int(RATE_LIMIT_WINDOW - (now - hits[0])) + 1
+            g.rate_remaining = 0
+            g.rate_reset = reset_in
+            body, status = _error(
+                'Rate limit exceeded',
+                f'Too many requests. Retry after {reset_in} seconds.',
+                429,
+            )
+            resp = make_response(body, status)
+            resp.headers['Retry-After'] = str(reset_in)
+            return resp
+        hits.append(now)
+        g.rate_remaining = RATE_LIMIT_MAX - len(hits)
+        g.rate_reset = int(RATE_LIMIT_WINDOW - (now - hits[0])) + 1
+
+
+@app.after_request
+def _add_standard_headers(response):
+    response.headers['X-API-Version'] = API_VERSION
+    response.headers['X-RateLimit-Limit'] = str(RATE_LIMIT_MAX)
+    if hasattr(g, 'rate_remaining'):
+        response.headers['X-RateLimit-Remaining'] = str(g.rate_remaining)
+    if hasattr(g, 'rate_reset'):
+        response.headers['X-RateLimit-Reset'] = str(g.rate_reset)
+    return response
+
+
 # --- JSON error handlers -------------------------------------------------
 # Guarantee every failure (including unmatched routes, wrong methods, and
 # uncaught exceptions) returns the same JSON `ErrorResponse` shape instead of
@@ -109,7 +168,10 @@ def _process_and_write(text, command_queue=None, write_hardware=True):
     if write_hardware:
         try:
             LedNameBadge.write(buf)
-        except Exception as e:
+        # LedNameBadge.write() calls sys.exit() (SystemExit, a BaseException)
+        # when no device is connected, so catch that too and degrade gracefully
+        # instead of tearing down the request.
+        except (Exception, SystemExit) as e:
             print(f"_process_and_write: hardware write failed: {e}")
 
     if command_queue is not None:
@@ -168,7 +230,8 @@ def get_predefined_icons():
     try:
         creator = SimpleTextAndIcons()
         icons = [f':{name}:' for name in creator.bitmap_named.keys()]
-        response = {'icons': icons}
+        # Envelope carries `status` for consistency with the other endpoints.
+        response = {'status': 'Predefined icons retrieved', 'icons': icons}
         if include_meta:
             response['meta'] = [
                 {'name': name, 'image': _icon_to_png_base64(data, cols)}

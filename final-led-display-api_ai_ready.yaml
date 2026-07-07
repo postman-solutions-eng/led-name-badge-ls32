@@ -94,6 +94,10 @@ info:
 servers:
   - url: http://127.0.0.1:5001
     description: Local development server
+  - url: https://led-display.staging.example.com
+    description: Staging server (replace with your deployment host)
+  - url: https://led-display.example.com
+    description: Production server (replace with your deployment host)
 tags:
   - name: display
     description: Operations that render text or summaries onto the LED badge
@@ -109,7 +113,49 @@ components:
         API key for requests to the LED Display API. On `/display-summary`, when
         set, also used to fetch services from the Postman API Catalog; when
         omitted or empty, the default demo summary is shown.
+  headers:
+    X-API-Version:
+      description: Version of the API that served the response
+      schema:
+        type: string
+        example: 1.1.0
+    X-RateLimit-Limit:
+      description: Maximum number of requests allowed per 60-second window
+      schema:
+        type: integer
+        example: 60
+    X-RateLimit-Remaining:
+      description: Requests remaining in the current window
+      schema:
+        type: integer
+        example: 59
+    X-RateLimit-Reset:
+      description: Seconds until the current rate-limit window resets
+      schema:
+        type: integer
+        example: 60
   responses:
+    TooManyRequests:
+      description: Rate limit exceeded. Back off and retry after the indicated delay.
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying
+          schema:
+            type: integer
+            example: 42
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/X-RateLimit-Limit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/X-RateLimit-Remaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/X-RateLimit-Reset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: Rate limit exceeded
+            details: Too many requests. Retry after 42 seconds.
     BadRequest:
       description: Invalid request or unsupported display string
       content:
@@ -203,6 +249,15 @@ paths:
       responses:
         '200':
           description: Text displayed successfully
+          headers:
+            X-API-Version:
+              $ref: '#/components/headers/X-API-Version'
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
           content:
             application/json:
               schema:
@@ -222,6 +277,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '405':
           $ref: '#/components/responses/MethodNotAllowed'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
         '500':
           $ref: '#/components/responses/InternalServerError'
   /predefined-icons:
@@ -254,13 +311,26 @@ paths:
       responses:
         '200':
           description: List of all available icon codes (optionally with previews)
+          headers:
+            X-API-Version:
+              $ref: '#/components/headers/X-API-Version'
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
           content:
             application/json:
               schema:
                 type: object
                 required:
+                  - status
                   - icons
                 properties:
+                  status:
+                    type: string
+                    description: Status of the operation
                   icons:
                     type: array
                     description: Array of icon codes in `:icon_name:` format
@@ -290,6 +360,7 @@ paths:
                 iconsOnly:
                   summary: Default response (no meta)
                   value:
+                    status: Predefined icons retrieved
                     icons:
                       - ':ball:'
                       - ':happy:'
@@ -299,6 +370,7 @@ paths:
                 withMeta:
                   summary: Response when meta=true
                   value:
+                    status: Predefined icons retrieved
                     icons:
                       - ':ball:'
                       - ':happy:'
@@ -307,6 +379,8 @@ paths:
                         image: 'data:image/png;base64,iVBORw0KGgo...'
                       - name: happy
                         image: 'data:image/png;base64,iVBORw0KGgo...'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
         '500':
           $ref: '#/components/responses/InternalServerError'
   /display-summary:
@@ -373,6 +447,15 @@ paths:
       responses:
         '200':
           description: Summary message displayed successfully
+          headers:
+            X-API-Version:
+              $ref: '#/components/headers/X-API-Version'
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
           content:
             application/json:
               schema:
@@ -476,5 +559,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
         '500':
           $ref: '#/components/responses/InternalServerError'
