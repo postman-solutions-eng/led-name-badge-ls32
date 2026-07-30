@@ -215,25 +215,6 @@ paths:
               example:
                 details: '''🌍'''
                 error: Invalid display string format
-        '500':
-          description: Error when not started with right permissions
-          headers:
-            Server:
-              schema:
-                type: string
-              example: Werkzeug/3.1.4 Python/3.13.5
-            Date:
-              schema:
-                type: string
-              example: Mon, 19 Jan 2026 12:16:58 GMT
-            Content-Length:
-              schema:
-                type: integer
-              example: '265'
-            Connection:
-              schema:
-                type: string
-              example: close
       tags:
         - display-text
       description: >-
@@ -372,7 +353,7 @@ paths:
         Returns a list of all available icon codes that can be used in display
         text. Icons are returned as simple string codes in the `:icon_name:`
         format.
-  /display-summary:
+  /displaySummary/:
     post:
       summary: Display Summary
       responses:
